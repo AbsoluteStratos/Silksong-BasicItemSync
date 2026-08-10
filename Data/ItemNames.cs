@@ -13,6 +13,7 @@ namespace BasicItemSync.Data
     {
         public static Dictionary<string, Key> BoolKeys = new()
         {
+            // Abilities
             { nameof(PlayerData.hasSilkSpecial),                new("", FlagType.Ability) },
             { nameof(PlayerData.hasNeedleThrow),                new("Silk Spear", FlagType.Ability) },
             { nameof(PlayerData.hasThreadSphere),               new("Thread Storm", FlagType.Ability) },
@@ -34,7 +35,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.hasSuperJump),                  new("Silk Soar", FlagType.Ability) },
             { nameof(PlayerData.HasBoundCrestUpgrader),         new("", FlagType.Ability) },
 
-            { nameof(PlayerData.hasQuill),                  new("Quill", FlagType.Collectable) },
+            // Maps
             { nameof(PlayerData.HasMossGrottoMap),          new("Moss Grotto", FlagType.Map) },
             { nameof(PlayerData.HasWildsMap),               new("Far Fields", FlagType.Map) },
             { nameof(PlayerData.HasBoneforestMap),          new("Marrow", FlagType.Map) },
@@ -119,11 +120,11 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.ShakraFinalQuestAppear),        new("", FlagType.Map) },
             //{ nameof(PlayerData.citadelWoken),                  new("", FlagType.Map) },
 
+            // Pins
             { nameof(PlayerData.hasPinBench),               new("Bench Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinCocoon),              new("Cocoon Pin", FlagType.Pin) },
             { nameof(PlayerData.hasPinShop),                new("Shop Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinSpa),                 new("Spa Pins", FlagType.Pin) },
-
             { nameof(PlayerData.hasPinStag),                new("Bellway Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinTube),                new("Ventrica Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinFleaMarrowlands),     new("Marrowlands Flea Pins", FlagType.Pin) },
@@ -138,6 +139,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.hasMarker_d),               new("Dark Map Marker", FlagType.Pin) },
             { nameof(PlayerData.hasMarker_e),               new("Bronze Map Marker", FlagType.Pin) },
 
+            // Bellshrines
             { nameof(PlayerData.bellShrineBoneForest),      new("Marrow", FlagType.Bellshrine) },
             { nameof(PlayerData.bellShrineWilds),           new("Far Fields", FlagType.Bellshrine) },
             { nameof(PlayerData.bellShrineGreymoor),        new("Greymoor", FlagType.Bellshrine) },
@@ -145,16 +147,17 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.bellShrineBellhart),        new("Bellhart", FlagType.Bellshrine) },
             { nameof(PlayerData.bellShrineEnclave),         new("Enclave", FlagType.Bellshrine) },
 
+            // Bosses
             { nameof(PlayerData.defeatedMossMother),        new("Moss Mother", FlagType.Boss) },
             { nameof(PlayerData.defeatedMossEvolver),       new("Moss Mothers", FlagType.Boss) },
             { nameof(PlayerData.DefeatedBonetownBoss),      new("Bone Bottom Boss", FlagType.Boss) },
             { nameof(PlayerData.skullKingDefeated),         new("Skull Tyrant", FlagType.Boss) },
             { nameof(PlayerData.skullKingKilled),           new("Skull Tyrant (Bone Bottom)", FlagType.Boss) },
             { nameof(PlayerData.defeatedBellBeast),         new("Bell Beast", FlagType.Boss) },
-            { nameof(PlayerData.bonebottomQuestBoardFixed), new("", FlagType.Boss) },
+            { nameof(PlayerData.bonebottomQuestBoardFixed), new("", FlagType.Boss) }, // Set when bell beast defeated
             { nameof(PlayerData.defeatedAntQueen),          new("Skarrsinger Karmelita", FlagType.Boss) },
             { nameof(PlayerData.defeatedLace1),             new("Lace 1", FlagType.Boss) },
-            { nameof(PlayerData.laceLeftDocks),             new("", FlagType.Boss) },
+            { nameof(PlayerData.laceLeftDocks),             new("", FlagType.Boss) }, // Set when lace 1 skipped
             { nameof(PlayerData.defeatedSongGolem),         new("Fourth Chorus", FlagType.Boss) },
             { nameof(PlayerData.defeatedDockForemen),       new("Forebrothers Signis & Gron", FlagType.Boss) },
             { nameof(PlayerData.defeatedAntTrapper),        new("Gurr the Outcast", FlagType.Boss) },
@@ -173,7 +176,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.DefeatedSwampShaman),       new("Groal the Great", FlagType.Boss) },
             { nameof(PlayerData.defeatedCoralDrillers),     new("Great Conchflies", FlagType.Boss) },
             { nameof(PlayerData.defeatedCoralDrillerSolo),  new("Raging Conchfly", FlagType.Boss) },
-            { nameof(PlayerData.coralDrillerSoloReady),     new("", FlagType.Boss) },
+            { nameof(PlayerData.coralDrillerSoloReady),     new("", FlagType.Boss) }, // Set when great conchflies defeated
             { nameof(PlayerData.defeatedCoralKing),         new("Crust King Khann", FlagType.Boss) },
             { nameof(PlayerData.defeatedLastJudge),         new("Last Judge", FlagType.Boss) },
             { nameof(PlayerData.defeatedZapCoreEnemy),      new("Voltvyrm", FlagType.Boss) },
@@ -182,11 +185,11 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.defeatedBroodMother),       new("Broodmother", FlagType.Boss) },
             { nameof(PlayerData.defeatedTrobbio),           new("Trobbio", FlagType.Boss) },
             { nameof(PlayerData.defeatedTormentedTrobbio),  new("Tormented Trobbio", FlagType.Boss) },
-            { nameof(PlayerData.completedGrandStageBattle), new("", FlagType.Boss) },
+            { nameof(PlayerData.completedGrandStageBattle), new("", FlagType.Boss) }, // Set when trobbio defeated
             { nameof(PlayerData.defeatedCogworkDancers),    new("Cogwork Dancers", FlagType.Boss) },
             { nameof(PlayerData.defeatedLaceTower),         new("Lace 2", FlagType.Boss) },
-            { nameof(PlayerData.laceTowerDoorOpened),       new("", FlagType.Boss) },
-            { nameof(PlayerData.MelodyLiftCanReturn),       new("", FlagType.Boss) },
+            { nameof(PlayerData.laceTowerDoorOpened),       new("", FlagType.Boss) }, // Set when lace 2 defeated
+            { nameof(PlayerData.MelodyLiftCanReturn),       new("", FlagType.Boss) }, // Set when lace 2 defeated
             { nameof(PlayerData.wardBossDefeated),          new("The Unravelled", FlagType.Boss) },
             { nameof(PlayerData.defeatedSongChevalierBoss), new("Second Sentinel", FlagType.Boss) },
             { nameof(PlayerData.defeatedWhiteCloverstag),   new("Palestag", FlagType.Boss) },
@@ -194,6 +197,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.garmondBlackThreadDefeated),new("Lost Garmond", FlagType.Boss) },
             { nameof(PlayerData.ant02GuardDefeated),        new("Skarrgard 1", FlagType.Boss) },
 
+            // Arenas
             { nameof(PlayerData.ant04_battleCompleted),         new("Hunter's March", FlagType.Arena) },
             { nameof(PlayerData.greymoor_04_battleCompleted),   new("Greymoor Left", FlagType.Arena) },
             { nameof(PlayerData.completedGreymoor17Battle),     new("Greymoor Right", FlagType.Arena) },
@@ -209,6 +213,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.song_04_battleCompleted),       new("Choral Chambers (Spa)", FlagType.Arena) },
             { nameof(PlayerData.completedCog10_abyssBattle),    new("Cogwork Core", FlagType.Arena) },
 
+            // Progression (Key) Items
             { nameof(PlayerData.HasMelodyArchitect),            new("Architect's Melody", FlagType.Progression) },
             { nameof(PlayerData.HasMelodyLibrarian),            new("Vaultkeeper's Melody", FlagType.Progression) },
             { nameof(PlayerData.HasMelodyConductor),            new("Conductor's Melody", FlagType.Progression) },
@@ -228,6 +233,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.collectedWardBossKey),          new("Whiteward Boss Key", FlagType.Progression) },
             { nameof(PlayerData.wokeSongChevalier),             new("Second Sentinel", FlagType.Progression) },
 
+            // Collectable Items
             { nameof(PlayerData.PurchasedBonebottomFaithToken),     new("", FlagType.Collectable) },
             { nameof(PlayerData.PurchasedBonebottomToolMetal),      new("", FlagType.Collectable) },
             { nameof(PlayerData.PurchasedPilgrimsRestMemoryLocket), new("", FlagType.Collectable) },
@@ -239,6 +245,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.purchasedGrindleSimpleKey),         new("", FlagType.Collectable) },
             { nameof(PlayerData.purchasedGrindleMemoryLocket),      new("", FlagType.Collectable) },
             { nameof(PlayerData.PurchasedArchitectKey),             new("", FlagType.Collectable) },
+            { nameof(PlayerData.hasQuill),                          new("Quill", FlagType.Collectable) },
             { nameof(PlayerData.hasJournal),                        new("Journal", FlagType.Collectable) },
             { nameof(PlayerData.CollectedMementoGrey),              new("Grey Memento", FlagType.Collectable) },
             { nameof(PlayerData.CollectedMementoSprintmaster),      new("Sprintmaster Memento", FlagType.Collectable) },
@@ -255,6 +262,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.ConstructedMaterium),               new("", FlagType.Collectable) },
             { nameof(PlayerData.ConstructedFarsight),               new("", FlagType.Collectable) },
 
+            // Transit
             { nameof(PlayerData.UnlockedDocksStation),              new("Deep Docks", FlagType.Bellway) },
             { nameof(PlayerData.UnlockedBoneforestEastStation),     new("Far Fields", FlagType.Bellway) },
             { nameof(PlayerData.UnlockedGreymoorStation),           new("Greymoor", FlagType.Bellway) },
@@ -273,6 +281,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.UnlockedEnclaveTube),       new("Songclave", FlagType.Ventrica) },
             { nameof(PlayerData.UnlockedArboriumTube),      new("Memorium", FlagType.Ventrica) },
 
+            // Upgrades
             { nameof(PlayerData.PurchasedBonebottomHeartPiece),     new("", FlagType.Mask) },
             { nameof(PlayerData.PurchasedBelltownShellFragment),    new("", FlagType.Mask) },
             { nameof(PlayerData.MerchantEnclaveShellFragment),      new("", FlagType.Mask) },
@@ -288,6 +297,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.PurchasedArchitectToolKit),         new("", FlagType.CraftingKit) },
             { nameof(PlayerData.purchasedGrindleToolKit),           new("", FlagType.CraftingKit) },
 
+            // Fleas
             { nameof(PlayerData.SavedFlea_Bone_06),             new("The Marrow", FlagType.Flea) },
             { nameof(PlayerData.SavedFlea_Dock_16),             new("Deep Docks", FlagType.Flea) },
             { nameof(PlayerData.SavedFlea_Bone_East_05),        new("Far Fields", FlagType.Flea) },
@@ -319,6 +329,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.tamedGiantFlea),                new("The Memorium (Giant Flea)", FlagType.Flea) },
             { nameof(PlayerData.MetTroupeHunterWild),           new("Putrified Ducts (Vog)", FlagType.Flea) },
 
+            // Tools/crests
             { nameof(PlayerData.dicePilgrimDefeated),           new("", FlagType.Tool) },
             { nameof(PlayerData.completedMemory_reaper),        new("", FlagType.Tool) },
             { nameof(PlayerData.completedMemory_wanderer),      new("", FlagType.Tool) },
@@ -343,6 +354,7 @@ namespace BasicItemSync.Data
             //CompletedWeaveSprintChallengeMax
             //CollectedDustCageKey
 
+            // Shortcuts
             { nameof(PlayerData.BonePlazaOpened),                       new("", FlagType.Shortcut) },
             { nameof(PlayerData.belltownBasementBreakWall),             new("", FlagType.Shortcut) },
             { nameof(PlayerData.basementAntWall),                       new("", FlagType.Shortcut) },
@@ -414,6 +426,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.openedCitadelSpaLeft),                  new("", FlagType.Shortcut) },
             { nameof(PlayerData.openedCitadelSpaRight),                 new("", FlagType.Shortcut) },
 
+            // Quests
             { nameof(PlayerData.fixerBridgeConstructed),        new("", FlagType.Quest) },
             { nameof(PlayerData.fixerStatueConstructed),        new("", FlagType.Quest) },
             { nameof(PlayerData.boneBottomAddition_RagLine),    new("", FlagType.Quest) },

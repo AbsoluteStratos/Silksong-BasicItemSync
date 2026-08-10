@@ -7,6 +7,7 @@ namespace BasicItemSync.Modules.Hooks;
 [HarmonyPatch(typeof(HeroController))]
 internal class HeroControllerHook
 {
+    // Ensure breaking the cocoon doesn't send other players that money
     [HarmonyPatch(nameof(HeroController.CocoonBroken), typeof(bool), typeof(bool))]
     [HarmonyPrefix]
     public static void CocoonBrokenPrefix(out int __state)
@@ -26,14 +27,19 @@ internal class HeroControllerHook
         ClientState.LastCurrency = __state;
     }
 
-    public static bool CollectedBeast;
+    // Silk Heart
+    public static string LastCollectedScene = "";
     [HarmonyPatch(nameof(HeroController.AddToMaxSilkRegen))]
     [HarmonyPrefix]
-    public static void AddToMaxSilkRegen()
+    public static bool AddToMaxSilkRegen()
     {
-        if (ClientState.WasUpgradeReceived(FlagType.SilkHeart)) return;
+        if (ClientState.WasUpgradeReceived(FlagType.SilkHeart)) return true;
+        if (SceneManager.GetActiveScene().name == LastCollectedScene) return false;
 
-        if (SceneManager.GetActiveScene().name == "Bone_05") CollectedBeast = true;
-        NetworkSender.SendUpgrade(SceneManager.GetActiveScene().name, FlagType.SilkHeart);
+        var scene = SceneManager.GetActiveScene().name;
+        LastCollectedScene = scene;
+
+        NetworkSender.SendUpgrade(scene, FlagType.SilkHeart);
+        return true;
     }
 }

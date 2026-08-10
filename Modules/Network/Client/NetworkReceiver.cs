@@ -136,7 +136,7 @@ internal class NetworkReceiver
                 FlagType.Spool => Upgrader.UpgradeSpool(packet.Key),
                 FlagType.Pouch => Upgrader.UpgradePouch(),
                 FlagType.CraftingKit => Upgrader.UpgradeCraftingKit(),
-                FlagType.SilkHeart => Upgrader.UpgradeSilkHeart(),
+                FlagType.SilkHeart => Upgrader.UpgradeSilkHeart(packet.Key),
                 FlagType.Needle => Upgrader.UpgradeNeedle(),
                 _ => Upgrader.NoOp()
             };

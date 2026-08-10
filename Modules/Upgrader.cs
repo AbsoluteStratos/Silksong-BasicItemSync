@@ -1,4 +1,5 @@
-﻿using Silksong.AssetHelper.ManagedAssets;
+﻿using BasicItemSync.Modules.Hooks;
+using Silksong.AssetHelper.ManagedAssets;
 using System.Collections;
 using UnityEngine;
 
@@ -90,8 +91,11 @@ namespace BasicItemSync.Modules
 
             return Save();
         }
-        public static bool UpgradeSilkHeart()
+        public static bool UpgradeSilkHeart(string scene)
         {
+            if (HeroControllerHook.LastCollectedScene == scene) return false;
+
+            HeroControllerHook.LastCollectedScene = scene;
             PlayerData.instance.silkRegenMax++;
 
             LoadAndDisplay(ref SilkHeartCollectable, "SilkHeart", "UI", "INV_MSG_THREAD_HEART");
