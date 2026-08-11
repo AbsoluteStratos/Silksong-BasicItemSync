@@ -16,9 +16,9 @@ BasicItemSync can be automatically installed by any Thunderstore compatible mod 
 
 ## Commands
 ```
-/sync [setting] [true/false]
+/sync [module] [true/false]
 ```
-Enables or disables syncing a specific module:
+Enables or disables syncing one of the following modules. All but `QuestItems` are on by default.
 - Currency
 	- Shell Shards
 	- Rosaries
