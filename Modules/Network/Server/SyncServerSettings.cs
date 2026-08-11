@@ -18,7 +18,6 @@ namespace BasicItemSync.Modules.Network.Server
         public bool SyncAbilities = true;
         public bool SyncMaps = true;
         public bool SyncPins = true;
-        public bool SyncBellshrines = true;
         public bool SyncBattles = true;
         public bool SyncProgression = true;
         public bool SyncCollectables = true;
@@ -50,12 +49,12 @@ namespace BasicItemSync.Modules.Network.Server
                 FlagType.Pouch => SyncUpgrades,
                 FlagType.CraftingKit => SyncUpgrades,
                 FlagType.Quest => SyncQuests,
+                FlagType.QuestItem => SyncQuestItems,
                 FlagType.Tool => SyncTools,
                 FlagType.Crest => SyncTools,
                 FlagType.SilkHeart => SyncUpgrades,
                 FlagType.Needle => SyncUpgrades,
                 FlagType.Bench => SyncProgression,
-                FlagType.QuestItem => SyncQuestItems,
                 FlagType.Shortcut => SyncShortcuts,
                 FlagType.DoNotSync => false,
                 _ => false,

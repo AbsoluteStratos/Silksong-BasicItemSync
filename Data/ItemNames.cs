@@ -14,14 +14,6 @@ namespace BasicItemSync.Data
         public static Dictionary<string, Key> BoolKeys = new()
         {
             // Abilities
-            { nameof(PlayerData.hasSilkSpecial),                new("", FlagType.Ability) },
-            { nameof(PlayerData.hasNeedleThrow),                new("Silk Spear", FlagType.Ability) },
-            { nameof(PlayerData.hasThreadSphere),               new("Thread Storm", FlagType.Ability) },
-            { nameof(PlayerData.hasParry),                      new("Cross Stitch", FlagType.Ability) },
-            { nameof(PlayerData.hasHarpoonDash),                new("Clawline", FlagType.Ability) },
-            { nameof(PlayerData.hasSilkCharge),                 new("Sharpdart", FlagType.Ability) },
-            { nameof(PlayerData.hasSilkBomb),                   new("Rune Rage", FlagType.Ability) },
-            { nameof(PlayerData.hasSilkBossNeedle),             new("Pale Nails", FlagType.Ability) },
             { nameof(PlayerData.hasNeedolin),                   new("Needolin", FlagType.Ability) },
             { nameof(PlayerData.hasDash),                       new("Dash", FlagType.Ability) },
             { nameof(PlayerData.hasBrolly),                     new("Drifter's Cloak", FlagType.Ability) },
@@ -29,8 +21,6 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.hasDoubleJump),                 new("Faydown Cloak", FlagType.Ability) },
             { nameof(PlayerData.UnlockedFastTravel),            new("Bell Beast", FlagType.Ability) },
             { nameof(PlayerData.UnlockedFastTravelTeleport),    new("Beastling Call", FlagType.Ability) },
-            { nameof(PlayerData.UnlockedExtraBlueSlot),         new("Upgraded Vesticrest", FlagType.Ability) },
-            { nameof(PlayerData.UnlockedExtraYellowSlot),       new("Vesticrest", FlagType.Ability) },
             { nameof(PlayerData.hasChargeSlash),                new("Needle Strike", FlagType.Ability) },
             { nameof(PlayerData.hasSuperJump),                  new("Silk Soar", FlagType.Ability) },
             { nameof(PlayerData.HasBoundCrestUpgrader),         new("", FlagType.Ability) },
@@ -330,6 +320,16 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.MetTroupeHunterWild),           new("Putrified Ducts (Vog)", FlagType.Flea) },
 
             // Tools/crests
+            { nameof(PlayerData.hasSilkSpecial),                new("", FlagType.Tool) },
+            { nameof(PlayerData.hasNeedleThrow),                new("Silk Spear", FlagType.Tool) },
+            { nameof(PlayerData.hasThreadSphere),               new("Thread Storm", FlagType.Tool) },
+            { nameof(PlayerData.hasParry),                      new("Cross Stitch", FlagType.Tool) },
+            { nameof(PlayerData.hasHarpoonDash),                new("Clawline", FlagType.Tool) },
+            { nameof(PlayerData.hasSilkCharge),                 new("Sharpdart", FlagType.Tool) },
+            { nameof(PlayerData.hasSilkBomb),                   new("Rune Rage", FlagType.Tool) },
+            { nameof(PlayerData.hasSilkBossNeedle),             new("Pale Nails", FlagType.Tool) },
+            { nameof(PlayerData.UnlockedExtraBlueSlot),         new("Upgraded Vesticrest", FlagType.Tool) },
+            { nameof(PlayerData.UnlockedExtraYellowSlot),       new("Vesticrest", FlagType.Tool) },
             { nameof(PlayerData.dicePilgrimDefeated),           new("", FlagType.Tool) },
             { nameof(PlayerData.completedMemory_reaper),        new("", FlagType.Tool) },
             { nameof(PlayerData.completedMemory_wanderer),      new("", FlagType.Tool) },
@@ -433,11 +433,6 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.soulSnareReady),                new("", FlagType.Quest) },
             { nameof(PlayerData.PinstressPeakBattleAccepted),   new("", FlagType.Quest) },
             { nameof(PlayerData.broodMotherEyeCollected),       new("", FlagType.Quest) },
-            { nameof(PlayerData.GourmandGivenStew),             new("", FlagType.Quest) },
-            { nameof(PlayerData.GourmandGivenNectar),           new("", FlagType.Quest) },
-            { nameof(PlayerData.GourmandGivenEgg),              new("", FlagType.Quest) },
-            { nameof(PlayerData.GourmandGivenMeat),             new("", FlagType.Quest) },
-            { nameof(PlayerData.GourmandGivenCoral),            new("", FlagType.Quest) },
             { nameof(PlayerData.GotGourmandReward),             new("", FlagType.Quest) },
             { nameof(PlayerData.enclaveAddition_PinRack),       new("", FlagType.Quest) },
             { nameof(PlayerData.enclaveAddition_CloakLine),     new("", FlagType.Quest) },
@@ -448,6 +443,11 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.MushroomQuestFound5),           new("", FlagType.Quest) },
             { nameof(PlayerData.MushroomQuestFound6),           new("", FlagType.Quest) },
             { nameof(PlayerData.MushroomQuestFound7),           new("", FlagType.Quest) },
+            { nameof(PlayerData.GourmandGivenStew),             new("", FlagType.QuestItem) },
+            { nameof(PlayerData.GourmandGivenNectar),           new("", FlagType.QuestItem) },
+            { nameof(PlayerData.GourmandGivenEgg),              new("", FlagType.QuestItem) },
+            { nameof(PlayerData.GourmandGivenMeat),             new("", FlagType.QuestItem) },
+            { nameof(PlayerData.GourmandGivenCoral),            new("", FlagType.QuestItem) },
             // WoodWitchGaveMandrake
             // gainedCurse
 

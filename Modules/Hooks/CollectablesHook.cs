@@ -11,7 +11,7 @@ internal class CollectableItemPickupHook
     static Dictionary<string, FlagType> CollectableTypes = new()
     {
         { "Ant Trapper Item", FlagType.QuestItem },
-        { "Architect Key", FlagType.Collectable },
+        { "Architect Key", FlagType.Progression },
         { "Beastfly Remainss", FlagType.QuestItem },
         { "Belltown House Key", FlagType.Progression },
         { "Blue Goop Jar", FlagType.QuestItem },
