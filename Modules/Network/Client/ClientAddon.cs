@@ -41,6 +41,8 @@ internal class ClientAddon : SSMP.Api.Client.ClientAddon
         EventHooks.Initialize();
         Settings = new();
 
+        api.UiManager.ChatBox.AddMessage("BasicItemSync is in beta. Please report any bugs to the link on the mod page.");
+
         CurrencyRoutine = SyncPlugin.Instance.StartCoroutine(CurrencySender());
     }
 

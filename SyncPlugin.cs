@@ -9,7 +9,6 @@ using System.Reflection;
 
 namespace BasicItemSync
 {
-    // TODO - adjust the plugin guid as needed
     [BepInDependency("ssmp")]
     [BepInDependency("org.silksong-modding.assethelper")]
     [BepInAutoPlugin(id: "io.github.bobbythecatfish.basicitemsync")]

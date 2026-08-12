@@ -4,6 +4,11 @@ See the [commands section](#commands) for a list of all the things this mod sync
 
 > This mod is very much in beta. Please report bugs here: https://github.com/BobbyTheCatfish/Silksong-BasicItemSync/issues
 
+## IMPORTANT USAGE NOTE
+BasicItemSync currently only supports completely synchronous playthroughs.
+This means that **all players need to start from completely fresh save files**, and **new players should not join** midway through a playthrough.
+Items that are obtained will only be sent to players currently connected to the server. **They will not be re-sent for new players.**
+
 ## Installation
 BasicItemSync can be automatically installed by any Thunderstore compatible mod manager.
 
