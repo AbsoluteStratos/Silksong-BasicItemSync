@@ -208,7 +208,7 @@ internal static class PacketInstantiate
 {
     internal static IPacketData Instantiate(Packets packetID)
     {
-        Log.LogInfo($"[PACKETS] Received {packetID}");
+        Log.LogDebug($"[PACKETS] Received {packetID}");
         return packetID switch
         {
             Packets.BoolPlayerData => new PacketDataCollection<SendBoolItemPacket>(),

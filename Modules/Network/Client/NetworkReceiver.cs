@@ -178,6 +178,6 @@ internal class NetworkReceiver
     static void OnSettingsUpdate(SettingsUpdatePacket packet)
     {
         ClientAddon.Settings.CopyFrom(packet.Settings);
-        Log.LogInfo("Received new settings");
+        Log.LogInfo("[CLI] Received new settings");
     }
 }

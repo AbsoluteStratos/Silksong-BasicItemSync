@@ -18,7 +18,7 @@ internal class ServerAddon : SSMP.Api.Server.ServerAddon
     public override void Initialize(IServerApi serverApi)
     {
         Log.SetLogger(Logger);
-        Log.LogInfo("Sync Server Addon enabled");
+        Log.LogInfo("Item Sync Server Addon enabled");
         Settings = SyncServerSettings.ReadFromFile();
         Instance = this;
         api = serverApi;

@@ -28,7 +28,7 @@ internal static class PlayerDataHook
     public static void BoolUpdated(string boolName, bool value, PlayerDataBoolOperation.Operation operation = PlayerDataBoolOperation.Operation.Set)
     {
         if (string.IsNullOrEmpty(boolName)) return;
-        Log.LogInfo($"[CLI: PD BOOL] {boolName}");
+        Log.LogDebug($"[CLI: PD BOOL] {boolName}");
 
         if (ItemNames.BoolKeys.TryGetValue(boolName, out var key))
         {
@@ -46,7 +46,7 @@ internal static class PlayerDataHook
     {
         if (string.IsNullOrEmpty(intName)) return;
 
-        Log.LogInfo($"[CLI: PD INT] {intName}");
+        Log.LogDebug($"[CLI: PD INT] {intName}");
         if (ItemNames.IntKeys.TryGetValue(intName, out var key))
         {
             var existing = PlayerData.instance.GetInt(intName);

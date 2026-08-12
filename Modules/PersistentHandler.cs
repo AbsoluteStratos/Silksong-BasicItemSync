@@ -57,7 +57,6 @@ namespace BasicItemSync.Modules
             var rawItem = ObjectHelper.FindPersistent<bool>(sceneName, keyName);
             if (rawItem == null || rawItem is not PersistentBoolItem item) return;
 
-            Log.LogWarning(item.name);
             if (item.TryGetComponent<Lever>(out var lever)) // activate levers
             {
                 var trigger = lever.canHitTrigger;

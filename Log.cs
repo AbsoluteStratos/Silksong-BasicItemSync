@@ -60,8 +60,10 @@ internal static class Log
     }
     public static void LogDebug(params object[] data)
     {
+#if DEBUG
         foreach (object obj in data)
             logger.Debug(obj.ToString());
+#endif
     }
     public static void LogMessage(params object[] data)
     {

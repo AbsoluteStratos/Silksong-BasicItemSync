@@ -18,7 +18,7 @@ namespace BasicItemSync.Modules.Network.Client
         {
             if (!ClientAddon.api.NetClient.IsConnected || Sender == null)
             {
-                Log.LogInfo("Not connected");
+                Log.LogDebug("Not connected");
                 return;
             }
 
@@ -27,7 +27,7 @@ namespace BasicItemSync.Modules.Network.Client
                 return;
             }
 
-            Log.LogInfo($"[CLI] Sending {type}");
+            Log.LogDebug($"[CLI] Sending {type}");
             Sender.SendCollectionData(type, packet);
         }
 
@@ -35,7 +35,7 @@ namespace BasicItemSync.Modules.Network.Client
         {
             if (!ClientAddon.Settings.FlagAllowed(flagType))
             {
-                Log.LogWarning($"[CLI] Syncing {flagType} is disabled.");
+                Log.LogDebug($"[CLI] Syncing {flagType} is disabled.");
                 return false;
             }
 
