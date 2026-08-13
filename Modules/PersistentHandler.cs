@@ -93,9 +93,9 @@ namespace BasicItemSync.Modules
                 responder.InvokeEvents(status);
             }
 
+            if (item.disablePrefabIfActivated) item.disablePrefabIfActivated.SetActive(false);
             if (item.disableIfActivated || forceDisable)
             {
-                if (item.disablePrefabIfActivated) item.disablePrefabIfActivated.SetActive(false);
                 item.gameObject.SetActive(false);
             }
         }

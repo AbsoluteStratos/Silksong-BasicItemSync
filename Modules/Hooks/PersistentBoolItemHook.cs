@@ -67,7 +67,7 @@ internal class PersistentBoolItemHook
         { "bone carriage",                  FlagType.Shortcut },
         { "barrel plat lift",               FlagType.Shortcut },
         { "dockdashexploderock",            FlagType.Shortcut },
-        { "explode_wall (7) - boneEast07_openedMidRoof",    FlagType.Shortcut },
+        { "explode_wall (7) - boneeast07_openedmidroof",    FlagType.Shortcut },
         { "bone_east_10_church",            FlagType.Shortcut },
         { "toll door",                      FlagType.Shortcut },
         { "toll door breakable cog",        FlagType.Shortcut },
@@ -95,7 +95,7 @@ internal class PersistentBoolItemHook
         { "harpoon ring pull switch",       FlagType.Shortcut },
         { "dock_pressure_plate_lock",       FlagType.Shortcut },
         { "greymoor_lever_simple_edited",   FlagType.Shortcut },
-        { "Dust_02Gate",                    FlagType.Shortcut },
+        { "dust_02gate",                    FlagType.Shortcut },
         { "greymoor_lever_simple",          FlagType.Shortcut },
         { "break wall dustpen cage",        FlagType.Shortcut },
         { "plat collider",                  FlagType.Shortcut },
@@ -226,8 +226,8 @@ internal class PersistentBoolItemHook
         { "cog_choir_cylinder",                 FlagType.Progression },
         { "thread_memory_orb_source",           FlagType.Progression },
         { "shrine pressure plate l",            FlagType.Progression },
-        { "shrine pressure plate TR",           FlagType.Progression },
-        { "shrine pressure plate BR",           FlagType.Progression },
+        { "shrine pressure plate tr",           FlagType.Progression },
+        { "shrine pressure plate br",           FlagType.Progression },
         { "plaque pressure plate",              FlagType.Progression },
         { "memory orb group",                   FlagType.Progression },
         { "song knight tube",                   FlagType.Progression },
@@ -301,6 +301,7 @@ internal class PersistentBoolItemHook
         FlagType flagType;
 
         var commonId = Regex.Replace(id.ToLower(), " ?\\((\\d+|Clone)\\)$", "");
+        Log.LogDebug(scene, id, commonId);
         if (__instance.TryGetComponent<Gate>(out var _)) flagType = FlagType.Shortcut;
         //else if (__instance.TryGetComponent<Lever>(out var _)) flagType = FlagType.Shortcut; // pesky dial door bridge in Song_20b
         //else if (__instance.TryGetComponent<BattleScene>(out var _)) flagType = FlagType.Arena;
