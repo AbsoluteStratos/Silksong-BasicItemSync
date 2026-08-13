@@ -53,23 +53,13 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendPendingCurrency()
         {
-            if (RosariesToSend > 0)
-            {
-                SendData(Packets.Currency, new SendCurrencyPacket
-                {
-                    CurrencyType = InternalCurrencyType.Rosary,
-                    Amount = RosariesToSend
-                });
-            }
+            if (RosariesToSend == 0 && ShardsToSend == 0) return;
 
-            if (ShardsToSend > 0)
+            SendData(Packets.Currency, new SendCurrencyPacket
             {
-                SendData(Packets.Currency, new SendCurrencyPacket
-                {
-                    CurrencyType = InternalCurrencyType.ShellShard,
-                    Amount = ShardsToSend
-                });
-            }
+                Rosaries = (short)RosariesToSend,
+                Shards = (short)ShardsToSend,
+            });
 
             RosariesToSend = 0;
             ShardsToSend = 0;

@@ -156,19 +156,19 @@ internal class SendFloatItemPacket : SendFlagPacket
 
 internal class SendCurrencyPacket : ClientPacket
 {
-    public InternalCurrencyType CurrencyType;
-    public int Amount;
+    public short Rosaries;
+    public short Shards;
     public override bool IsReliable => false;
     public override void WriteData(IPacket packet)
     {
-        packet.Write((byte)CurrencyType);
-        packet.Write(Amount);
+        packet.Write(Rosaries);
+        packet.Write(Shards);
     }
 
     public override void ReadData(IPacket packet)
     {
-        CurrencyType = (InternalCurrencyType)packet.ReadByte();
-        Amount = packet.ReadInt();
+        Rosaries = packet.ReadShort();
+        Shards = packet.ReadShort();
     }
 }
 
