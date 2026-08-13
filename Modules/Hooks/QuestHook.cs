@@ -20,7 +20,7 @@ internal static class QuestHook
             else if (quest.RewardItem.name == "Silk Spool") NetworkSender.SendUpgrade("", FlagType.Spool);
             else if (quest.RewardItem.name == "Tool Pouch Pickup") NetworkSender.SendUpgrade("", FlagType.Pouch);
             else if (quest.RewardItem.name == "Took Kit Pickup") NetworkSender.SendUpgrade("", FlagType.CraftingKit);
-            else if (quest.RewardIcon.name == "Needle Upgrade") NetworkSender.SendUpgrade("", FlagType.Needle);
+            else if (quest.RewardItem.name == "Needle Upgrade") NetworkSender.SendUpgrade("", FlagType.Needle);
         }
 
         var displayName = Language.Get(quest.displayName);

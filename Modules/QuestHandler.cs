@@ -10,7 +10,7 @@ internal class QuestHandler
         quest.SilentlyComplete();
         quest.ConsumeTarget();
         
-        UI.ShowPopup(new QuestPopupItem(quest));
+        UI.ShowPopup(new PopupItem(quest));
     }
     public static void EndQuestSilent(string name)
     {
