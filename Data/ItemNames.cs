@@ -18,12 +18,13 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.hasDash),                       new("Dash", FlagType.Ability) },
             { nameof(PlayerData.hasBrolly),                     new("Drifter's Cloak", FlagType.Ability) },
             { nameof(PlayerData.hasWalljump),                   new("Cling Grip", FlagType.Ability) },
+            { nameof(PlayerData.hasHarpoonDash),                new("Clawline", FlagType.Ability) },
             { nameof(PlayerData.hasDoubleJump),                 new("Faydown Cloak", FlagType.Ability) },
             { nameof(PlayerData.UnlockedFastTravel),            new("Bell Beast", FlagType.Ability) },
             { nameof(PlayerData.UnlockedFastTravelTeleport),    new("Beastling Call", FlagType.Ability) },
             { nameof(PlayerData.hasChargeSlash),                new("Needle Strike", FlagType.Ability) },
             { nameof(PlayerData.hasSuperJump),                  new("Silk Soar", FlagType.Ability) },
-            { nameof(PlayerData.HasBoundCrestUpgrader),         new("", FlagType.Ability) },
+            { nameof(PlayerData.HasBoundCrestUpgrader),         new("Sylphsong", FlagType.Ability) },
 
             // Maps
             { nameof(PlayerData.HasMossGrottoMap),          new("Moss Grotto", FlagType.Map) },
@@ -123,11 +124,11 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.hasPinFleaCitadel),         new("Citadel Flea Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinFleaPeaklands),       new("Peaklands Flea Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinFleaMucklands),       new("Mucklands Flea Pins", FlagType.Pin) },
-            { nameof(PlayerData.hasMarker_a),               new("Shell Map Marker", FlagType.Pin) },
-            { nameof(PlayerData.hasMarker_b),               new("Ring Map Marker", FlagType.Pin) },
-            { nameof(PlayerData.hasMarker_c),               new("Hunt Map Marker", FlagType.Pin) },
-            { nameof(PlayerData.hasMarker_d),               new("Dark Map Marker", FlagType.Pin) },
-            { nameof(PlayerData.hasMarker_e),               new("Bronze Map Marker", FlagType.Pin) },
+            { nameof(PlayerData.hasMarker_a),               new("Shell Map Markers", FlagType.Pin) },
+            { nameof(PlayerData.hasMarker_b),               new("Ring Map Markers", FlagType.Pin) },
+            { nameof(PlayerData.hasMarker_c),               new("Hunt Map Markers", FlagType.Pin) },
+            { nameof(PlayerData.hasMarker_d),               new("Dark Map Markers", FlagType.Pin) },
+            { nameof(PlayerData.hasMarker_e),               new("Bronze Map Markers", FlagType.Pin) },
 
             // Bellshrines
             { nameof(PlayerData.bellShrineBoneForest),      new("Marrow", FlagType.Bellshrine) },
@@ -324,7 +325,6 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.hasNeedleThrow),                new("Silk Spear", FlagType.Tool) },
             { nameof(PlayerData.hasThreadSphere),               new("Thread Storm", FlagType.Tool) },
             { nameof(PlayerData.hasParry),                      new("Cross Stitch", FlagType.Tool) },
-            { nameof(PlayerData.hasHarpoonDash),                new("Clawline", FlagType.Tool) },
             { nameof(PlayerData.hasSilkCharge),                 new("Sharpdart", FlagType.Tool) },
             { nameof(PlayerData.hasSilkBomb),                   new("Rune Rage", FlagType.Tool) },
             { nameof(PlayerData.hasSilkBossNeedle),             new("Pale Nails", FlagType.Tool) },
@@ -459,7 +459,7 @@ namespace BasicItemSync.Data
         };
 
         public static Dictionary<string, Key> IntKeys = new() {
-            //{ nameof(PlayerData.nailUpgrades),      new("Nail Upgrade", FlagType.Needle)},
+            { nameof(PlayerData.nailUpgrades),      new("N", FlagType.Needle)},
 
             { nameof(PlayerData.QuillState), new("", FlagType.Collectable) },
             //{ nameof(PlayerData.ToolPouchUpgrades), new("Tool Pouch Upgrade", FlagType.Pouch) },
