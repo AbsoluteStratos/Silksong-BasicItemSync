@@ -1,9 +1,10 @@
 ﻿using System;
+using TeamCherry.Localization;
 using UnityEngine.SceneManagement;
 
 namespace BasicItemSync.Modules;
 
-internal class ObjectHelper
+internal static class ObjectHelper
 {
     public static PersistentItem<T>? FindPersistent<T>(string sceneName, string id) where T : IEquatable<T>
     {
@@ -23,5 +24,13 @@ internal class ObjectHelper
         }
 
         return null;
+    }
+
+    extension(Language)
+    {
+        public static string Get(LocalisedString str)
+        {
+            return Language.Get(str.Key, str.Sheet);
+        }
     }
 }
