@@ -19,7 +19,7 @@ namespace BasicItemSync.Modules
                 FlagType.Ability => GetAbilityIcon(key),
                 FlagType.Map => GetMap(name),
                 FlagType.Pin => GetPin(key, name),
-                FlagType.Bellshrine => GameManager.instance.achievementHandler.AchievementsList[]
+                // TODO: Finish
                 _ => null
             };
 
@@ -43,7 +43,7 @@ namespace BasicItemSync.Modules
                 if (d is not CollectableItemStates dresses) return null;
 
                 var dress = dresses.states[state];
-                return new PopupItem(Language.Get(dress.DisplayName), dress.Icon);
+                return new PopupItem(Language.GetLocal(dress.DisplayName), dress.Icon);
             }
 
             PopupItem GetNeedleStrike()
@@ -124,7 +124,7 @@ namespace BasicItemSync.Modules
         static Transform GetInventory()
         {
             var cam = GameCameras.instance.hudCamera.gameObject;
-            return cam.transform.GetChild(4);
+            return cam.transform.GetChild(0).GetChild(4);
         }
     }
 

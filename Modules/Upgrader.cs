@@ -1,5 +1,4 @@
-﻿using BasicItemSync.Modules.Hooks;
-using Silksong.AssetHelper.ManagedAssets;
+﻿using Silksong.AssetHelper.ManagedAssets;
 using System.Collections;
 using UnityEngine;
 
@@ -52,24 +51,16 @@ namespace BasicItemSync.Modules
             return Save();
         }
 
-        public static bool GiveCollectable(string persistentScene, string persistentKey, string itemKey)
+        public static bool GiveCollectable(string itemKey, int amount)
         {
-            //var objName = "Collectable Item Pickup";
-
-            //if (key == "Crest Socket Unlocker")
-            //{
-            //    if (sceneName == "Bone_10") objName += " Locket";
-            //    else if (sceneName == "Coral_02") objName += " (1)";
-            //    else if (sceneName == "Shadow_27") objName = "Sack Corpse Pickup";
-            //}
-
-            if (!string.IsNullOrEmpty(persistentScene) && !string.IsNullOrEmpty(persistentKey))
+            var collectable = CollectableItemManager.GetItemByName(itemKey);
+            if (!collectable)
             {
-                PersistentHandler.SetPersistentBoolData(persistentScene, persistentKey, true, true);
+                Log.LogError($"Unknown collectable {itemKey}");
+                return false;
             }
 
-            var collectable = CollectableItemManager.GetItemByName(itemKey);
-            collectable.AddAmount(1);
+            collectable.AddAmount(amount);
             UI.ShowPopup(collectable);
 
             return Save();
