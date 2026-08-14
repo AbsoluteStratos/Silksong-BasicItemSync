@@ -1,14 +1,13 @@
 ﻿using BasicItemSync.Modules.Network.Client;
 using HarmonyLib;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 namespace BasicItemSync.Modules.Hooks;
 
 [HarmonyPatch(typeof(CollectableItemPickup))]
 internal class CollectableItemPickupHook
 {
-    static Dictionary<string, FlagType> CollectableTypes = new()
+    public static readonly Dictionary<string, FlagType> CollectableTypes = new()
     {
         { "Ant Trapper Item", FlagType.QuestItem },
         { "Architect Key", FlagType.Progression },
@@ -25,6 +24,7 @@ internal class CollectableItemPickupHook
         { "Coral Heart", FlagType.Progression },
         { "Coral Ingredient", FlagType.QuestItem },
         { "Courier Supplies", FlagType.DoNotSync },
+        { "Courier Supplies Gourmand", FlagType.DoNotSync },
         { "Courier Supplies Mask Maker", FlagType.DoNotSync },
         { "Courier Supplies Slave", FlagType.DoNotSync },
         { "Craw Summons", FlagType.Progression },
@@ -54,7 +54,7 @@ internal class CollectableItemPickupHook
         { "Memento Surface", FlagType.Collectable },
         { "Mossberry", FlagType.QuestItem },
         { "Mossberry Stew", FlagType.QuestItem },
-        { "Pale Oil", FlagType.QuestItem },
+        { "Pale_Oil", FlagType.Collectable },
         { "Pickled Roach Egg", FlagType.QuestItem },
         { "Pilgrim Rag", FlagType.QuestItem },
         { "Plasmium", FlagType.QuestItem },
@@ -103,12 +103,15 @@ internal class CollectableItemPickupHook
         var key = __instance.Item.name;
         if (ClientState.WasItemReceived(key)) return;
 
-        
         if (!__result || !__instance.Item) return;
-        if (!CollectableTypes.TryGetValue(__instance.Item.name, out var flagType))
+        if (!CollectableTypes.TryGetValue(key, out var flagType))
         {
             if (__instance.Item is CollectableRelic) flagType = FlagType.Collectable;
-            else return;
+            else
+            {
+                Log.LogWarning($"Unknown item {key}");
+                return;
+            }
         }
 
         if (flagType == FlagType.DoNotSync) return;
@@ -117,20 +120,11 @@ internal class CollectableItemPickupHook
         PlayerDataHook.BoolUpdated(boolName, true);
 
         var displayName = __instance.Item.GetPopupName();
+        NetworkSender.SendCollectable(key, displayName, 1, flagType);
 
-        string persistentKey;
-        string persistentScene;
         if (__instance.persistent)
         {
-            persistentKey = __instance.persistent.ItemData.ID;
-            persistentScene = __instance.persistent.ItemData.SceneName;
+            PersistentBoolItemHook.UpdateValue(__instance.persistent);
         }
-        else
-        {
-            persistentKey = __instance.gameObject.name;
-            persistentScene = SceneManager.GetActiveScene().name;
-        }
-
-        NetworkSender.SendCollectable(key, displayName, persistentKey, persistentScene, flagType);
     }
 }
