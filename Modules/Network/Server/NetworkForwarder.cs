@@ -21,9 +21,9 @@ internal class NetworkForwarder
         Receiver.RegisterPacketHandler<SendBoolItemPacket>(Packets.Quest, OnQuest);
         Receiver.RegisterPacketHandler<SendBoolItemPacket>(Packets.Tool, OnTool);
         Receiver.RegisterPacketHandler<SendFlagPacket>(Packets.Upgrade, OnUpgrade);
-        Receiver.RegisterPacketHandler<SendPersistentBoolPacket>(Packets.Collectable, OnCollectable);
-        Receiver.RegisterPacketHandler<SendPersistentBoolPacket>(Packets.PersistentBool, OnPersistentBool);
-        Receiver.RegisterPacketHandler<SendPersistentIntPacket>(Packets.PersistentInt, OnPersistentInt);
+        Receiver.RegisterPacketHandler<SendIntItemPacket>(Packets.Collectable, OnCollectable);
+        Receiver.RegisterPacketHandler<SendPersistentBoolsPacket>(Packets.PersistentBool, OnPersistentBool);
+        Receiver.RegisterPacketHandler<SendPersistentIntsPacket>(Packets.PersistentInt, OnPersistentInt);
     }
 
     static void Broadcast(ushort senderId, Packets type, ClientPacket packet)
@@ -65,9 +65,33 @@ internal class NetworkForwarder
     static void OnQuest(ushort id, SendBoolItemPacket packet) => OnFlag(id, packet, Packets.Quest, false);
     static void OnTool(ushort id, SendBoolItemPacket packet) => OnFlag(id, packet, Packets.Tool, false);
     static void OnUpgrade(ushort id, SendFlagPacket packet) => OnFlag(id, packet, Packets.Upgrade, false);
-    static void OnCollectable(ushort id, SendPersistentBoolPacket packet) => OnFlag(id, packet, Packets.Collectable, false);
-    static void OnPersistentBool(ushort id, SendPersistentBoolPacket packet) => OnFlag(id, packet, Packets.PersistentBool, true);
-    static void OnPersistentInt(ushort id, SendPersistentIntPacket packet) => OnFlag(id, packet, Packets.PersistentInt, true);
+    static void OnCollectable(ushort id, SendIntItemPacket packet) => OnFlag(id, packet, Packets.Collectable, false);
+    static void OnPersistentBool(ushort id, SendPersistentBoolsPacket packet)
+    {
+        var newPacket = new SendPersistentBoolsPacket();
+
+        foreach (var item in packet.Values)
+        {
+            if (!ServerAddon.Settings.FlagAllowed(item.Value.Item2)) continue;
+            newPacket.Values.Add(item.Key, item.Value);
+        }
+
+        if (newPacket.Values.Count == 0) return;
+        Broadcast(id, Packets.PersistentBool, newPacket);
+    }
+    static void OnPersistentInt(ushort id, SendPersistentIntsPacket packet)
+    {
+        var newPacket = new SendPersistentIntsPacket();
+
+        foreach (var item in packet.Values)
+        {
+            if (!ServerAddon.Settings.FlagAllowed(item.Value.Item2)) continue;
+            newPacket.Values.Add(item.Key, item.Value);
+        }
+
+        if (newPacket.Values.Count == 0) return;
+        Broadcast(id, Packets.PersistentInt, newPacket);
+    }
     static void Announce(ushort id, SendFlagPacket packet, bool isPossiblySilent)
     {
         var type = packet.FlagType;

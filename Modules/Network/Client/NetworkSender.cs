@@ -1,5 +1,4 @@
 ﻿using SSMP.Api.Client.Networking;
-using System.Collections.Generic;
 
 namespace BasicItemSync.Modules.Network.Client
 {
@@ -8,7 +7,8 @@ namespace BasicItemSync.Modules.Network.Client
         static IClientAddonNetworkSender<Packets>? Sender;
         static int RosariesToSend = 0;
         static int ShardsToSend = 0;
-        static Dictionary<(string, string), SendPersistentPacket> PersistentsToSend = [];
+        static SendPersistentBoolsPacket PersistentBoolsToSend = new();
+        static SendPersistentIntsPacket PersistentIntsToSend = new();
         public static void Initialize()
         {
             Sender = ClientAddon.api.NetClient.GetNetworkSender<Packets>(ClientAddon.Instance);
@@ -67,15 +67,18 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendPendingPersistents()
         {
-            if (PersistentsToSend.Count > 0)
+            if (PersistentBoolsToSend.Values.Count > 0)
             {
-                foreach (var packet in PersistentsToSend.Values)
-                {
-                    SendData(Packets.PersistentBool, packet);
-                }
+                SendData(Packets.PersistentBool, PersistentBoolsToSend);
             }
 
-            PersistentsToSend.Clear();
+            if (PersistentIntsToSend.Values.Count > 0)
+            {
+                SendData(Packets.PersistentInt, PersistentIntsToSend);
+            }
+
+            PersistentBoolsToSend = new();
+            PersistentIntsToSend = new();
         }
 
         public static void SendFlag(string playerDataKey, FlagType flagType, string name, bool state = true)
@@ -132,48 +135,35 @@ namespace BasicItemSync.Modules.Network.Client
             });
         }
 
-        public static void SendCollectable(string key, string itemName, string persistentKey, string persistentScene, FlagType flagType = FlagType.Collectable)
+        public static void SendCollectable(string key, string itemName, int amount, FlagType flagType = FlagType.Collectable)
         {
-            SendData(Packets.Collectable, new SendPersistentBoolPacket
+            SendData(Packets.Collectable, new SendIntItemPacket
             {
                 Key = key,
                 Name = itemName,
-                FlagType = flagType,
-                PersistentObject = persistentKey,
-                PersistentScene = persistentScene
+                Number = amount,
+                FlagType = flagType
             });
         }
 
         public static void AddPersistentIntData(string id, string scene, int value, FlagType flagType)
         {
-            if (PersistentsToSend.ContainsKey((scene, id))) return;
-            PersistentsToSend[(scene, id)] = new SendPersistentIntPacket
-            {
-                Key = "",
-                Name = "",
-                FlagType = flagType,
-                PersistentObject = id,
-                PersistentScene = scene,
-                State = value
-            };
+            if (PersistentIntsToSend.Values.ContainsKey((scene, id))) return;
+            if (!CanSync(flagType)) return;
 
-            if (PersistentsToSend.Count == 1) SyncPlugin.AddNextFrameAction(SendPendingPersistents);
+            PersistentIntsToSend.Values[(scene, id)] = (value, flagType);
+
+            if (PersistentIntsToSend.Values.Count == 1 && PersistentBoolsToSend.Values.Count == 0) SyncPlugin.AddNextFrameAction(SendPendingPersistents);
         }
 
         public static void AddPersistentBoolData(string id, string scene, bool value, FlagType flagType)
         {
-            if (PersistentsToSend.ContainsKey((scene, id))) return;
-            PersistentsToSend[(scene, id)] = new SendPersistentBoolPacket
-            {
-                Key = "",
-                Name = "",
-                FlagType = flagType,
-                PersistentObject = id,
-                PersistentScene = scene,
-                State = value
-            };
+            if (PersistentBoolsToSend.Values.ContainsKey((scene, id))) return;
+            if (!CanSync(flagType)) return;
 
-            if (PersistentsToSend.Count == 1) SyncPlugin.AddNextFrameAction(SendPendingPersistents);
+            PersistentBoolsToSend.Values[(scene, id)] = (value, flagType);
+
+            if (PersistentBoolsToSend.Values.Count == 1 && PersistentIntsToSend.Values.Count == 0) SyncPlugin.AddNextFrameAction(SendPendingPersistents);
         }
     }
 }

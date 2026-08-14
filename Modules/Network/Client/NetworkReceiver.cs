@@ -19,9 +19,16 @@ internal class NetworkReceiver
         Receiver.RegisterPacketHandler<SendBoolItemPacket>(Packets.Quest, OnQuestItem);
         Receiver.RegisterPacketHandler<SendBoolItemPacket>(Packets.Tool, OnTool);
         Receiver.RegisterPacketHandler<SendFlagPacket>(Packets.Upgrade, OnUpgrade);
-        Receiver.RegisterPacketHandler<SendPersistentBoolPacket>(Packets.Collectable, OnCollectable);
-        Receiver.RegisterPacketHandler<SendPersistentBoolPacket>(Packets.PersistentBool, OnPersistentBool);
-        Receiver.RegisterPacketHandler<SendPersistentIntPacket>(Packets.PersistentInt, OnPersistentInt);
+        Receiver.RegisterPacketHandler<SendIntItemPacket>(Packets.Collectable, OnCollectable);
+        Receiver.RegisterPacketHandler<SendPersistentBoolsPacket>(Packets.PersistentBool, OnPersistentBools);
+        Receiver.RegisterPacketHandler<SendPersistentIntsPacket>(Packets.PersistentInt, OnPersistentInt);
+    }
+
+    static bool HandleSpecialData(SendFlagPacket packet)
+    {
+        UI.ShowPopup(packet.FlagType, packet.Key, packet.Name);
+
+        return false;
     }
 
     static void OnIntFlag(SendIntItemPacket packet)
@@ -29,7 +36,10 @@ internal class NetworkReceiver
         SyncPlugin.AddNextFrameAction(() =>
         {
             ClientState.LastItem = packet.Key;
-            PlayerData.instance.SetInt(packet.Key, packet.Number);
+            if (!HandleSpecialData(packet))
+            {
+                PlayerData.instance.SetInt(packet.Key, packet.Number);
+            }
             ClientState.LastItem = "";
         });
     }
@@ -39,7 +49,10 @@ internal class NetworkReceiver
         SyncPlugin.AddNextFrameAction(() =>
         {
             ClientState.LastItem = packet.Key;
-            PlayerData.instance.SetFloat(packet.Key, packet.Number);
+            if (!HandleSpecialData(packet))
+            {
+                PlayerData.instance.SetFloat(packet.Key, packet.Number);
+            }
             ClientState.LastItem = "";
         });
     }
@@ -49,7 +62,10 @@ internal class NetworkReceiver
         SyncPlugin.AddNextFrameAction(() =>
         {
             ClientState.LastItem = packet.Key;
-            PlayerData.instance.SetBool(packet.Key, packet.State);
+            if (!HandleSpecialData(packet))
+            {
+                PlayerData.instance.SetBool(packet.Key, packet.State);
+            }
             ClientState.LastItem = "";
 
             if (packet.FlagType == FlagType.Boss || packet.FlagType == FlagType.Arena) BattleManager.DefeatBattleScene(packet.Key);
@@ -60,15 +76,12 @@ internal class NetworkReceiver
     {
         SyncPlugin.AddNextFrameAction(() =>
         {
-            ClientState.LastCurrency = packet.Amount;
-            if (packet.CurrencyType == InternalCurrencyType.Rosary)
-            {
-                CurrencyManager.AddGeo(packet.Amount);
-            }
-            else
-            {
-                CurrencyManager.AddShards(packet.Amount);
-            }
+            ClientState.LastCurrency = packet.Rosaries;
+            if (packet.Rosaries > 0) CurrencyManager.AddGeo(packet.Rosaries);
+
+            ClientState.LastCurrency = packet.Shards;
+            if (packet.Shards > 0) CurrencyManager.AddShards(packet.Shards);
+            
             ClientState.LastCurrency = 0;
         });
     }
@@ -78,7 +91,10 @@ internal class NetworkReceiver
         SyncPlugin.AddNextFrameAction(() =>
         {
             ClientState.LastItem = packet.Key;
-            QuestHandler.EndQuest(packet.Key);
+            if (!HandleSpecialData(packet))
+            {
+                QuestHandler.EndQuest(packet.Key);
+            }
             ClientState.LastItem = "";
         });
     }
@@ -89,24 +105,27 @@ internal class NetworkReceiver
         {
             ClientState.LastItem = packet.Key;
 
-            if (packet.FlagType == FlagType.Crest)
+            if (!HandleSpecialData(packet))
             {
-                var crest = ToolItemManager.GetCrestByName(packet.Key);
-                if (crest)
+                if (packet.FlagType == FlagType.Crest)
                 {
-                    crest.Unlock();
+                    var crest = ToolItemManager.GetCrestByName(packet.Key);
+                    if (crest)
+                    {
+                        crest.Unlock();
+                    }
                 }
-            }
-            else
-            {
-                var tool = ToolItemManager.GetToolByName(packet.Key);
-                if (tool)
+                else
                 {
-                    PlayerData.instance.SeenToolGetPrompt = true;
-                    PlayerData.instance.SeenToolWeaponGetPrompt = true;
+                    var tool = ToolItemManager.GetToolByName(packet.Key);
+                    if (tool)
+                    {
+                        PlayerData.instance.SeenToolGetPrompt = true;
+                        PlayerData.instance.SeenToolWeaponGetPrompt = true;
 
-                    if (packet.State) tool.Unlock();
-                    else tool.Lock();
+                        if (packet.State) tool.Unlock();
+                        else tool.Lock();
+                    }
                 }
             }
 
@@ -122,7 +141,10 @@ internal class NetworkReceiver
             SyncPlugin.AddNextFrameAction(() =>
             {
                 ClientState.LastItem = packet.Name;
-                QuestHandler.EndQuestSilent(packet.Name);
+                if (!HandleSpecialData(packet))
+                {
+                    QuestHandler.EndQuestSilent(packet.Name);
+                }
                 ClientState.LastItem = "";
             });
         }
@@ -130,49 +152,60 @@ internal class NetworkReceiver
         SyncPlugin.AddNextFrameAction(() =>
         {
             ClientState.LastUpgrade = packet.FlagType;
-            _ = packet.FlagType switch
+            if (!HandleSpecialData(packet))
             {
-                FlagType.Mask => Upgrader.UpgradeMask(packet.Key),
-                FlagType.Spool => Upgrader.UpgradeSpool(packet.Key),
-                FlagType.Pouch => Upgrader.UpgradePouch(),
-                FlagType.CraftingKit => Upgrader.UpgradeCraftingKit(),
-                FlagType.SilkHeart => Upgrader.UpgradeSilkHeart(packet.Key),
-                FlagType.Needle => Upgrader.UpgradeNeedle(),
-                _ => Upgrader.NoOp()
-            };
+                _ = packet.FlagType switch
+                {
+                    FlagType.Mask => Upgrader.UpgradeMask(packet.Key),
+                    FlagType.Spool => Upgrader.UpgradeSpool(packet.Key),
+                    FlagType.Pouch => Upgrader.UpgradePouch(),
+                    FlagType.CraftingKit => Upgrader.UpgradeCraftingKit(),
+                    FlagType.SilkHeart => Upgrader.UpgradeSilkHeart(packet.Key),
+                    FlagType.Needle => Upgrader.UpgradeNeedle(),
+                    _ => Upgrader.NoOp()
+                };
+            }
             ClientState.LastUpgrade = FlagType.DoNotSync;
         });
     }
 
 
-    static void OnCollectable(SendPersistentBoolPacket packet)
+    static void OnCollectable(SendIntItemPacket packet)
     {
         SyncPlugin.AddNextFrameAction(() =>
         {
             ClientState.LastItem = packet.Key;
-            Upgrader.GiveCollectable(packet.PersistentScene, packet.PersistentObject, packet.Key);
+            if (!HandleSpecialData(packet))
+            {
+                Upgrader.GiveCollectable(packet.Key, packet.Number);
+            }
             ClientState.LastItem = "";
         });
     }
 
-    static void OnPersistentBool(SendPersistentBoolPacket packet)
+    static void OnPersistentBools(SendPersistentBoolsPacket packet)
     {
-        SyncPlugin.AddNextFrameAction(() =>
+        foreach (var item in packet.Values)
         {
-            ClientState.LastItem = packet.Key;
-            PersistentHandler.SetPersistentBoolData(packet.PersistentScene, packet.PersistentObject, packet.State);
-            ClientState.LastItem = "";
-        });
+            var scene = item.Key.Item1;
+            var id = item.Key.Item2;
+            var value = item.Value.Item1;
+
+            PersistentHandler.SetPersistentBoolData(scene, id, value);
+        }
     }
 
-    static void OnPersistentInt(SendPersistentIntPacket packet)
+    static void OnPersistentInt(SendPersistentIntsPacket packet)
     {
-        SyncPlugin.AddNextFrameAction(() =>
+        foreach (var item in packet.Values)
         {
-            ClientState.LastItem = packet.Key;
-            PersistentHandler.SetPersistentIntData(packet.PersistentScene, packet.PersistentObject, packet.State, packet.FlagType);
-            ClientState.LastItem = "";
-        });
+            var scene = item.Key.Item1;
+            var id = item.Key.Item2;
+            var value = item.Value.Item1;
+            var flagType = item.Value.Item2;
+
+            PersistentHandler.SetPersistentIntData(scene, id, value, flagType);
+        }
     }
 
     static void OnSettingsUpdate(SettingsUpdatePacket packet)

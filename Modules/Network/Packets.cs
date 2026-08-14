@@ -88,35 +88,75 @@ internal class SendPersistentPacket : SendFlagPacket
     }
 }
 
-internal class SendPersistentBoolPacket : SendPersistentPacket
+internal class SendPersistentBoolsPacket : ClientPacket
 {
-    public bool State = true;
+    public Dictionary<(string, string), (bool, FlagType)> Values = [];
     public override void WriteData(IPacket packet)
     {
-        base.WriteData(packet);
-        packet.Write(State);
+        packet.Write(Values.Count);
+        foreach (var val in Values)
+        {
+            var scene = val.Key.Item1;
+            var id = val.Key.Item2;
+            var value = val.Value.Item1;
+            var type = val.Value.Item2;
+
+            packet.Write(scene);
+            packet.Write(id);
+            packet.Write(value);
+            packet.Write((byte)type);
+        }
     }
 
     public override void ReadData(IPacket packet)
     {
-        base.ReadData(packet);
-        State = packet.ReadBool();
+        var len = packet.ReadInt();
+
+        for (var i = 0; i < len; i++)
+        {
+            var scene = packet.ReadString();
+            var id = packet.ReadString();
+            var value = packet.ReadBool();
+            var type = (FlagType)packet.ReadByte();
+
+            Values.Add((scene, id), (value, type));
+        }
     }
 }
 
-internal class SendPersistentIntPacket : SendPersistentPacket
+internal class SendPersistentIntsPacket : ClientPacket
 {
-    public int State = 0;
+    public Dictionary<(string, string), (int, FlagType)> Values = [];
     public override void WriteData(IPacket packet)
     {
-        base.WriteData(packet);
-        packet.Write(State);
+        packet.Write(Values.Count);
+        foreach (var val in Values)
+        {
+            var scene = val.Key.Item1;
+            var id = val.Key.Item2;
+            var value = val.Value.Item1;
+            var type = val.Value.Item2;
+
+            packet.Write(scene);
+            packet.Write(id);
+            packet.Write(value);
+            packet.Write((byte)type);
+        }
     }
 
     public override void ReadData(IPacket packet)
     {
-        base.ReadData(packet);
-        State = packet.ReadInt();
+        var len = packet.ReadInt();
+
+        for (var i = 0; i < len; i++)
+        {
+            var scene = packet.ReadString();
+            var id = packet.ReadString();
+            var value = packet.ReadInt(); 
+            var type = (FlagType)packet.ReadByte();
+
+            Values.Add((scene, id), (value, type));
+        }
     }
 }
 
@@ -177,7 +217,7 @@ internal class SettingsUpdatePacket : IPacketData
     public bool IsReliable => true;
     public bool DropReliableDataIfNewerExists => true;
 
-    public SyncServerSettings Settings;
+    public SyncServerSettings Settings = new();
 
     public void WriteData(IPacket packet)
     {
@@ -218,9 +258,9 @@ internal static class PacketInstantiate
             Packets.Quest => new PacketDataCollection<SendBoolItemPacket>(),
             Packets.Tool => new PacketDataCollection<SendBoolItemPacket>(),
             Packets.Upgrade => new PacketDataCollection<SendFlagPacket>(),
-            Packets.Collectable => new PacketDataCollection<SendPersistentBoolPacket>(),
-            Packets.PersistentBool => new PacketDataCollection<SendPersistentBoolPacket>(),
-            Packets.PersistentInt => new PacketDataCollection<SendPersistentIntPacket>(),
+            Packets.Collectable => new PacketDataCollection<SendIntItemPacket>(),
+            Packets.PersistentBool => new PacketDataCollection<SendPersistentBoolsPacket>(),
+            Packets.PersistentInt => new PacketDataCollection<SendPersistentIntsPacket>(),
             Packets.Settings => new SettingsUpdatePacket(),
             _ => new ErrorThrowingPacket(packetID, true)
         };
