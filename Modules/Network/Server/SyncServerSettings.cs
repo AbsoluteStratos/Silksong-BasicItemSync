@@ -24,6 +24,7 @@ namespace BasicItemSync.Modules.Network.Server
         public bool SyncUpgrades = true;
         public bool SyncTransit = true;
         public bool SyncShortcuts = true;
+        public bool SyncSpendingCurrency = true;
 
         public bool FlagAllowed(FlagType flag)
         {
@@ -74,9 +75,9 @@ namespace BasicItemSync.Modules.Network.Server
             return output;
         }
 
-        static List<PropertyInfo> GetProperties()
+        static List<FieldInfo> GetProperties()
         {
-            var props = typeof(SyncServerSettings).GetProperties().ToList();
+            var props = typeof(SyncServerSettings).GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).ToList();
             props.Sort((a, b) => a.Name.CompareTo(b.Name));
 
             return props;

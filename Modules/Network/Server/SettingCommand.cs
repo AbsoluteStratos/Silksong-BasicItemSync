@@ -3,6 +3,7 @@ using SSMP.Api.Command.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace BasicItemSync.Modules.Network.Server
@@ -36,11 +37,12 @@ namespace BasicItemSync.Modules.Network.Server
             }
 
             var settingName = "Sync" + arguments[1];
-            var settings = typeof(SyncServerSettings).GetAllFields(System.Reflection.BindingFlags.Public);
+            var settings = typeof(SyncServerSettings).GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            Log.LogDebug(settings.Length);
             var setting = settings.FirstOrDefault(s => s.Name.Equals(settingName, StringComparison.CurrentCultureIgnoreCase));
             if (setting == null)
             {
-                commandSender.SendMessage($"Unknown setting '{settingName}");
+                commandSender.SendMessage($"Unknown setting '{arguments[1]}'");
                 return;
             }
 
@@ -60,6 +62,7 @@ namespace BasicItemSync.Modules.Network.Server
                     return;
                 }
                 Settings.SetVariable(setting.Name, value);
+                Settings.SaveToFile();
                 NetworkForwarder.SendSettingsUpdate();
             }
         }

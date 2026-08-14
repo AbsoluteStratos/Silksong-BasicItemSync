@@ -42,17 +42,6 @@
     <None Include="thunderstore/icon.png" Pack="True" PackagePath="icon.png" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-    <Reference Include="Cinematic
-			   
-.BIE5.Mono">
-      <HintPath>H:\SteamLibrary\steamapps\common\Hollow Knight Silksong\BepInEx\plugins\CinematicUnityExplorer\CinematicUnityExplorer.BIE5.Mono.dll</HintPath>
-    </Reference>
-    <Reference Include="UniverseLib.Mono">
-      <HintPath>H:\SteamLibrary\steamapps\common\Hollow Knight Silksong\BepInEx\plugins\CinematicUnityExplorer\UniverseLib.Mono.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
   <Target Name="CopyAndPackageMod" AfterTargets="PostBuildEvent">
     <ItemGroup>
       <Binaries Include="$(TargetPath)" LocalDir="/" PackDir="/" />

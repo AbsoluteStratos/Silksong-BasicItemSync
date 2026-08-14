@@ -23,6 +23,7 @@ internal class ServerAddon : SSMP.Api.Server.ServerAddon
         Instance = this;
         api = serverApi;
 
+        ServerApi.CommandManager.RegisterCommand(new SettingCommand(Settings));
         NetworkForwarder.Initialize();
         api.ServerManager.PlayerConnectEvent += OnPlayerConnect;
     }
