@@ -50,7 +50,9 @@ internal static class ToolCrestHook
     {
         if (__instance.IsUnlocked && !ClientState.WasItemReceived(__instance.name))
         {
-            var name = Language.Get(__instance.DisplayName.Key, __instance.DisplayName.Sheet);
+            if (__instance.name == "Cursed" || __instance.name == "Cloakless") return;
+
+            var name = Language.GetLocal(__instance.DisplayName);
             NetworkSender.SendTool(__instance.name, name, true, true);
         }
     }
