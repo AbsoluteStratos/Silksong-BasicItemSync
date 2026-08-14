@@ -42,7 +42,7 @@ internal class PersistentIntItemHook
 
         FlagType flagType = FlagType.DoNotSync;
 
-        var commonId = id.ToLower(); //Regex.Replace(id.ToLower(), " ?\\((\\d+|Clone)\\)$", "");
+        var commonId = id.ToLower();
 
         foreach (var item in CurrencyItems)
         {
@@ -55,8 +55,8 @@ internal class PersistentIntItemHook
 
         if (flagType == FlagType.DoNotSync)
         {
-            if (id.StartsWith("bellshrine")) flagType = FlagType.Bellshrine;
-            else if (id.StartsWith("library sliding")) flagType = FlagType.Shortcut;
+            if (commonId.StartsWith("bellshrine")) flagType = FlagType.Bellshrine;
+            else if (commonId.StartsWith("library sliding")) flagType = FlagType.Shortcut;
         }
 
         if (flagType == FlagType.DoNotSync)
@@ -68,5 +68,45 @@ internal class PersistentIntItemHook
         Log.LogDebug($"[CLI: PERSISTENT INT] {commonId}, {flagType}");
 
         NetworkSender.AddPersistentIntData(id, scene, value, flagType);
+    }
+
+    public static void UpdateValue(PersistentIntItem persistent, int value)
+    {
+        if (persistent == null) return;
+        persistent.SaveState();
+        //var preValue = persistent.ItemData.Value;
+        //persistent.ItemData.Value = value;
+        //SaveStateNoConditionPostfix(persistent, preValue);
+    }
+}
+
+[HarmonyPatch(typeof(HitSlidePlatform))]
+internal static class HitSlidePlatformHook
+{
+    [HarmonyPatch(nameof(HitSlidePlatform.SetAtNode), typeof(int))]
+    [HarmonyPostfix]
+    public static void SetAtNode(HitSlidePlatform __instance, int nodeIndex)
+    {
+        PersistentIntItemHook.UpdateValue(__instance.persistent, nodeIndex);
+    }
+
+    [HarmonyPatch(nameof(HitSlidePlatform.OnHit))]
+    [HarmonyPrefix]
+    public static void OnHitPrefix(HitSlidePlatform __instance, out int __state)
+    {
+        __state = __instance.currentNodeIndex;
+    }
+
+    [HarmonyPatch(nameof(HitSlidePlatform.OnHit))]
+    [HarmonyPostfix]
+    public static void OnHit(HitSlidePlatform __instance, int __state)
+    {
+        if (__state == __instance.currentNodeIndex)
+        {
+            Log.LogDebug($"Platform {__instance.name} state was the same ({__state})");
+            return;
+        }
+
+        PersistentIntItemHook.UpdateValue(__instance.persistent, __instance.currentNodeIndex);
     }
 }
