@@ -4,58 +4,67 @@ namespace BasicItemSync.Modules
 {
     internal class PersistentHandler
     {
-        public static void SetPersistentIntData(string sceneName, string keyName, int status, FlagType flagType)
+        public static void SetPersistentIntData(string sceneName, string id, int status, FlagType flagType)
         {
-            var value = new PersistentItemData<int>
-            {
-                SceneName = sceneName,
-                ID = keyName,
-                IsSemiPersistent = false,
-                Value = status
-            };
 
-            if (SceneData.instance.PersistentInts.TryGetValue(sceneName, keyName, out var persistent))
+            if (SceneData.instance.PersistentInts.TryGetValue(sceneName, id, out var persistent))
             {
                 persistent.Value = status;
             }
             else
             {
+                var value = new PersistentItemData<int>
+                {
+                    SceneName = sceneName,
+                    ID = id,
+                    IsSemiPersistent = false,
+                    Value = status
+                };
                 SceneData.instance.PersistentInts.SetValue(value);
             }
 
-            var scene = SceneManager.GetActiveScene().name;
-            if (flagType == FlagType.Currency && scene != sceneName) return;
+            if (flagType == FlagType.Currency && SceneManager.GetActiveScene().name != sceneName) return;
             
-            var rawItem = ObjectHelper.FindPersistent<int>(sceneName, keyName);
+            var rawItem = ObjectHelper.FindPersistent<int>(sceneName, id);
             if (rawItem == null || rawItem is not PersistentIntItem item) return;
 
             item.ItemData.Value = status;
             item.Start();
+
+            // Needle hitbox already does this for us
+            //if (item.TryGetComponent<HitSlidePlatform>(out var plat))
+            //{
+            //    plat.SetAtNode(plat.nodes[status]);
+            //}
         }
 
-        public static void SetPersistentBoolData(string sceneName, string keyName, bool status, bool forceDisable = false)
+        public static void SetPersistentBoolData(string sceneName, string id, bool status, bool forceDisable = false)
         {
-            var value = new PersistentItemData<bool>
-            {
-                SceneName = sceneName,
-                ID = keyName,
-                IsSemiPersistent = false,
-                Value = status
-            };
 
-            //Log.LogInfo(sceneName, keyName, status);
-
-            if (SceneData.instance.PersistentBools.TryGetValue(sceneName, keyName, out var persistent))
+            if (SceneData.instance.PersistentBools.TryGetValue(sceneName, id, out var persistent))
             {
                 persistent.Value = status;
             }
             else
             {
+                var value = new PersistentItemData<bool>
+                {
+                    SceneName = sceneName,
+                    ID = id,
+                    IsSemiPersistent = false,
+                    Value = status
+                };
                 SceneData.instance.PersistentBools.SetValue(value);
             }
 
-            var rawItem = ObjectHelper.FindPersistent<bool>(sceneName, keyName);
-            if (rawItem == null || rawItem is not PersistentBoolItem item) return;
+            var rawItem = ObjectHelper.FindPersistent<bool>(sceneName, id);
+            if (rawItem == null || rawItem is not PersistentBoolItem item)
+            {
+                if (sceneName == SceneManager.GetActiveScene().name) Log.LogWarning($"Unable to find persistent {sceneName} {id}");
+                return;
+            }
+
+            item.ItemData.Value = status;
 
             if (item.TryGetComponent<Lever>(out var lever)) // activate levers
             {
@@ -91,6 +100,14 @@ namespace BasicItemSync.Modules
             else if (item.TryGetComponent<PersistentBoolItemResponder>(out var responder))
             {
                 responder.InvokeEvents(status);
+            }
+            else if (item.TryGetComponent<CollectableItemPickup>(out var _))
+            {
+                forceDisable = true;
+            }
+            else if (item.TryGetComponent<BattleScene>(out var scene))
+            {
+                BattleManager.DefeatBattleScene(scene);
             }
 
             if (item.disablePrefabIfActivated) item.disablePrefabIfActivated.SetActive(false);
