@@ -1,4 +1,6 @@
 ﻿
+using BasicItemSync.Modules.Network.Client;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,8 +35,11 @@ namespace BasicItemSync.Modules
                 return;
             }
             var battle = GetBattleScene(keyName);
-            if (!battle) return;
+            if (battle) DefeatBattleScene(battle);
+        }
 
+        public static void DefeatBattleScene(BattleScene battle)
+        {
             if (battle.started)
             {
                 var wave = battle.currentWave;
@@ -55,7 +60,18 @@ namespace BasicItemSync.Modules
 
         static void OnBellBeast()
         {
+            SceneData.instance.PersistentBools.SetValue(new PersistentItemData<bool>
+            {
+                ID = "Silk Heart",
+                SceneName = "Bone_05",
+                IsSemiPersistent = false,
+                Value = false,
+                Mutator = SceneData.PersistentMutatorTypes.None
+            });
+
             var scene = SceneManager.GetActiveScene();
+            var doHearts = ClientAddon.Settings.FlagAllowed(FlagType.SilkHeart);
+
             if (scene.name == "Bone_05")
             {
                 var bossScene = SceneManager.GetSceneByName("Bone_05_boss");
@@ -66,26 +82,44 @@ namespace BasicItemSync.Modules
                         obj.SetActive(false);
                     }
                 }
-            }
-            else if (scene.name == "Memory_Silk_Heart_BellBeast")
-            {
-                var loadInfo = new GameManager.SceneLoadInfo
+
+                if (!doHearts)
                 {
-                    SceneName = "Bone_05",
-                    EntryGateName = "bot1",
-                    PreventCameraFadeOut = true,
-                    WaitForSceneTransitionCameraFade = false,
-                    Visualization = GameManager.SceneLoadVisualizations.Default,
-                    AlwaysUnloadUnusedAssets = true,
-                    IsFirstLevelForPlayer = false
-                };
-
-                HeroController.instance.SetSilkRegenBlocked(false);
-                PlayerData.instance.disableInventory = false;
-                ToolItemManager.SetIsInCutscene(false);
-
-                GameManager.instance.BeginSceneTransition(loadInfo);
+                    var boss = bossScene.GetRootGameObjects()[0];
+                    for (var i = 0; i < boss.transform.childCount; i++)
+                    {
+                        var obj = boss.transform.GetChild(i);
+                        if (obj.name == "Silk Heart")
+                        {
+                            obj.gameObject.SetActive(true);
+                            return;
+                        }
+                    }
+                }
             }
+            //else if (scene.name == "Memory_Silk_Heart_BellBeast" && doHearts)
+            //{
+            //    var loadInfo = new GameManager.SceneLoadInfo
+            //    {
+            //        SceneName = "Bone_05",
+            //        EntryGateName = "bot1",
+            //        PreventCameraFadeOut = true,
+            //        WaitForSceneTransitionCameraFade = false,
+            //        Visualization = GameManager.SceneLoadVisualizations.Default,
+            //        AlwaysUnloadUnusedAssets = true,
+            //        IsFirstLevelForPlayer = false
+            //    };
+
+            //    HeroController.instance.SetSilkRegenBlocked(false);
+            //    PlayerData.instance.disableInventory = false;
+            //    ToolItemManager.SetIsInCutscene(false);
+
+            //    CameraBlurPlane.Spacing = 0;
+            //    CameraBlurPlane.Vibrancy = 0;
+            //    CameraBlurPlane.MaskLerp = 0;
+
+            //    GameManager.instance.BeginSceneTransition(loadInfo);
+            //}
         }
     }
 }
