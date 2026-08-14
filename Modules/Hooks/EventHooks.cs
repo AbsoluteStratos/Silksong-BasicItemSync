@@ -10,12 +10,13 @@ namespace BasicItemSync.Modules.Hooks;
 internal class EventHooks
 {
     static GameObject? HookObj;
-    static List<EventRegister> Hooks = [];
+    static readonly List<EventRegister> Hooks = [];
     static bool CollectedRecently = false;
     public static void Initialize()
     {
         AddHook("HEART PIECE COLLECTED", OnMask);
         AddHook("SILK SPOOL SAVE", OnSilkSpool);
+        AddHook("BEAST DEFEATED", OnBellBeastDefeated);
     }
 
     public static void Uninitialize()
@@ -24,6 +25,7 @@ internal class EventHooks
         {
             EventRegister.UnsubscribeEvent(hook);
         }
+
         if (HookObj) Object.Destroy(HookObj);
     }
 
@@ -68,18 +70,39 @@ internal class EventHooks
         SendUpgrade(FlagType.Spool);
     }
 
-    //static void OnSilkHeart()
-    //{
-    //    SendUpgrade(FlagType.SilkHeart);
-    //}
-
-    static void OnPouch()
+    static void OnBellBeastDefeated()
     {
-        SendUpgrade(FlagType.Pouch);
-    }
+        PlayerData.instance.SetBool(nameof(PlayerData.defeatedBellBeast), true);
 
-    static void OnCraftingKit()
-    {
-        SendUpgrade(FlagType.CraftingKit);
+        // If silk hearts are on but bosses are off, skip the silk heart once the boss is defeated
+        var canHeart = ClientAddon.Settings.FlagAllowed(FlagType.SilkHeart);
+        var canBoss = ClientAddon.Settings.FlagAllowed(FlagType.Boss);
+
+        if (canHeart && !canBoss)
+        {
+            if (!SceneData.instance.PersistentBools.TryGetValue("Bone_05", "Silk Heart", out var persistent))
+            {
+                Log.LogDebug($"[CLI] No silk heart persistent for Bone_05");
+                return;
+            }
+            
+            if (!persistent.Value)
+            {
+                Log.LogDebug($"[CLI] Haven't accepted silk heart for Bone_05");
+                return;
+            }
+
+            var bossScene = SceneManager.GetSceneByName("Bone_05_boss");
+            if (!bossScene.IsValid()) return;
+
+            Log.LogDebug($"[CLI] Deactivating bell beast");
+
+            foreach (var obj in bossScene.GetRootGameObjects())
+            {
+                obj.SetActive(false);
+            }
+
+            PlayerData.instance.UnlockedFastTravel = true;
+        }
     }
 }

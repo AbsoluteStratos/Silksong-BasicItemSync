@@ -93,12 +93,31 @@ namespace BasicItemSync.Modules
         }
         public static bool UpgradeSilkHeart(string scene)
         {
-            if (HeroControllerHook.LastCollectedScene == scene) return false;
+            if (SceneData.instance.PersistentBools.TryGetValue(scene, "Silk Heart", out var persistent))
+            {
+                if (persistent.Value)
+                {
+                    Log.LogDebug($"[CLI] Already collected silk heart for {scene}");
+                    return false;
+                }
+            }
 
-            HeroControllerHook.LastCollectedScene = scene;
+            //if (HeroControllerHook.LastCollectedScene == scene) return false;
+            //HeroControllerHook.LastCollectedScene = scene;
+
             PlayerData.instance.silkRegenMax++;
 
-            LoadAndDisplay(ref SilkHeartCollectable, "SilkHeart", "UI", "INV_MSG_THREAD_HEART");
+            Log.LogDebug($"[CLI] Collecting silk heart for {scene}");
+            SceneData.instance.PersistentBools.SetValue(new PersistentItemData<bool>
+            {
+                ID = "Silk Heart",
+                SceneName = scene,
+                IsSemiPersistent = false,
+                Value = true,
+                Mutator = SceneData.PersistentMutatorTypes.None
+            });
+
+            LoadAndDisplay(ref SilkHeartCollectable, "SilkHeart", "UI", "INV_DESC_SPOOL_SILKHEARTS");
 
             return Save();
         }

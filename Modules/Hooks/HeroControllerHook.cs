@@ -28,18 +28,24 @@ internal class HeroControllerHook
     }
 
     // Silk Heart
-    public static string LastCollectedScene = "";
     [HarmonyPatch(nameof(HeroController.AddToMaxSilkRegen))]
     [HarmonyPrefix]
-    public static bool AddToMaxSilkRegen()
+    public static void AddToMaxSilkRegen()
     {
-        if (ClientState.WasUpgradeReceived(FlagType.SilkHeart)) return true;
-        if (SceneManager.GetActiveScene().name == LastCollectedScene) return false;
+        if (ClientState.WasUpgradeReceived(FlagType.SilkHeart)) return;
 
         var scene = SceneManager.GetActiveScene().name;
-        LastCollectedScene = scene;
+        if (scene == "Memory_Silk_Heart_BellBeast") scene = "Bone_05";
+
+        SceneData.instance.PersistentBools.SetValue(new PersistentItemData<bool>
+        {
+            ID = "Silk Heart",
+            SceneName = scene,
+            IsSemiPersistent = false,
+            Value = true,
+            Mutator = SceneData.PersistentMutatorTypes.None
+        });
 
         NetworkSender.SendUpgrade(scene, FlagType.SilkHeart);
-        return true;
     }
 }
