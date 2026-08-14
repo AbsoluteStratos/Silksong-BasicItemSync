@@ -10,10 +10,15 @@ internal class CurrencyManagerHook
     [HarmonyPostfix]
     public static void ChangeCurrency(int amount, CurrencyType type)
     {
-#if DEBUG
-        //Log.LogInfo($"[CLI: CURRENCY] {amount} {type}s added");
-#endif
-        if (amount < 1) return;
+        Log.LogDebug($"[CLI: CURRENCY] {amount} {type}s added");
+
+        if (amount < 1)
+        {
+            if (!ClientAddon.Settings.SyncSpendingCurrency) return;
+            if (PlayerData.instance.health == 0) return;
+            if (PlayerData.instance.atBench) return;
+        }
+
         if (!ClientState.WasCurrencyReceived(amount))
         {
             var internalType = type == CurrencyType.Money ? InternalCurrencyType.Rosary : InternalCurrencyType.ShellShard;
