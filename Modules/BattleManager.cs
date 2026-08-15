@@ -1,5 +1,7 @@
 ﻿
+using BasicItemSync.Data;
 using BasicItemSync.Modules.Network.Client;
+using GenericVariableExtension;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -54,7 +56,19 @@ namespace BasicItemSync.Modules
             }
             else
             {
-                battle.gameObject.SetActive(false);
+                battle.BattleCompleted();
+                battle.completed = true;
+
+                // Do a bunch of logic from DoEndBattle
+                if (!string.IsNullOrEmpty(battle.setPDBoolOnEnd)) PlayerData.instance.SetVariable(battle.setPDBoolOnEnd, true);
+                if (!string.IsNullOrEmpty(battle.setExtraPDBoolOnEnd)) PlayerData.instance.SetVariable(battle.setExtraPDBoolOnEnd, true);
+                if (battle.camLocks && !battle.dontDisableCamlocksOnEnd) battle.camLocks.SetActive(false);
+                if (battle.openGatesOnEnd) battle.SendEventToChildren("BG OPEN");
+                if (battle.endScene) battle.SendEventToChildren("BATTLE END");
+                if (battle.activeDuringBattle) battle.activeDuringBattle.SetActive(false);
+                if (battle.disableActiveBeforeBattleAtEnd) battle.activeBeforeBattle.SetActive(false);
+                if (!string.IsNullOrEmpty(battle.battleEndEventRegister)) EventRegister.SendEvent(battle.battleEndEventRegister, null);
+                //battle.gameObject.SetActive(false);
             }
         }
 
