@@ -65,6 +65,7 @@ internal enum FlagType
     SilkHeart,
     Needle,
     Quest,
+    QuestStart,
     QuestItem,
     Tool,
     Crest,

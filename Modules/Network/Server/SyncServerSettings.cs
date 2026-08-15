@@ -11,20 +11,23 @@ namespace BasicItemSync.Modules.Network.Server
     internal class SyncServerSettings
     {
         public bool KillSwitch = false;
-        public bool SyncCurrency = true;
-        public bool SyncQuests = true;
-        public bool SyncQuestItems = false;
-        public bool SyncTools = true;
         public bool SyncAbilities = true;
         public bool SyncMaps = true;
         public bool SyncPins = true;
-        public bool SyncBattles = true;
+        public bool SyncCurrency = true;
+        public bool SyncSpendingCurrency = false;
+        public bool SyncQuests = true;
+        public bool SyncQuestItems = false;
+        public bool SyncBosses = true;
+        public bool SyncArenas = true;
         public bool SyncProgression = true;
+        public bool SyncFleas = true;
         public bool SyncCollectables = true;
         public bool SyncUpgrades = true;
+        public bool SyncTools = true;
+        public bool SyncCrests = true;
         public bool SyncTransit = true;
         public bool SyncShortcuts = true;
-        public bool SyncSpendingCurrency = false;
 
         public bool FlagAllowed(FlagType flag)
         {
@@ -36,10 +39,10 @@ namespace BasicItemSync.Modules.Network.Server
                 FlagType.Map => SyncMaps,
                 FlagType.Pin => SyncPins,
                 FlagType.Bellshrine => SyncProgression,
-                FlagType.Boss => SyncBattles,
-                FlagType.Arena => SyncBattles,
+                FlagType.Boss => SyncBosses,
+                FlagType.Arena => SyncArenas,
                 FlagType.Progression => SyncProgression,
-                FlagType.Flea => SyncCollectables,
+                FlagType.Flea => SyncFleas,
                 FlagType.Collectable => SyncCollectables,
                 FlagType.Bellway => SyncTransit,
                 FlagType.Ventrica => SyncTransit,
@@ -50,9 +53,10 @@ namespace BasicItemSync.Modules.Network.Server
                 FlagType.Pouch => SyncUpgrades,
                 FlagType.CraftingKit => SyncUpgrades,
                 FlagType.Quest => SyncQuests,
+                FlagType.QuestStart => SyncQuestItems,
                 FlagType.QuestItem => SyncQuestItems,
                 FlagType.Tool => SyncTools,
-                FlagType.Crest => SyncTools,
+                FlagType.Crest => SyncCrests,
                 FlagType.SilkHeart => SyncUpgrades,
                 FlagType.Needle => SyncUpgrades,
                 FlagType.Bench => SyncProgression,
