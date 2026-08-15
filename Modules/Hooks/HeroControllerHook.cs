@@ -1,4 +1,5 @@
-﻿using BasicItemSync.Modules.Network.Client;
+﻿using BasicItemSync.Data;
+using BasicItemSync.Modules.Network.Client;
 using HarmonyLib;
 using UnityEngine.SceneManagement;
 
@@ -39,7 +40,7 @@ internal class HeroControllerHook
 
         SceneData.instance.PersistentBools.SetValue(new PersistentItemData<bool>
         {
-            ID = "Silk Heart",
+            ID = ItemNames.SilkHeart,
             SceneName = scene,
             IsSemiPersistent = false,
             Value = true,

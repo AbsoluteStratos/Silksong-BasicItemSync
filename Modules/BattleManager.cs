@@ -62,7 +62,7 @@ namespace BasicItemSync.Modules
         {
             SceneData.instance.PersistentBools.SetValue(new PersistentItemData<bool>
             {
-                ID = "Silk Heart",
+                ID = ItemNames.SilkHeart,
                 SceneName = "Bone_05",
                 IsSemiPersistent = false,
                 Value = false,

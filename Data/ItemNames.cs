@@ -11,11 +11,18 @@ namespace BasicItemSync.Data
     }
     internal class ItemNames
     {
+        public const string MaskShard = "Heart Piece";
+        public const string SpoolShard = "Silk Spool";
+        public const string SilkHeart = "Silk Heart";
+        public const string ToolPouch = "Tool Pouch Pickup";
+        public const string CraftingKit = "Tool Kit Pickup";
+        public const string NeedleUpgrade = "Needle Upgrade";
+
         public static Dictionary<string, Key> BoolKeys = new()
         {
             // Abilities
             { nameof(PlayerData.hasNeedolin),                   new("Needolin", FlagType.Ability) },
-            { nameof(PlayerData.hasDash),                       new("Dash", FlagType.Ability) },
+            { nameof(PlayerData.hasDash),                       new("Swift Step", FlagType.Ability) },
             { nameof(PlayerData.hasBrolly),                     new("Drifter's Cloak", FlagType.Ability) },
             { nameof(PlayerData.hasWalljump),                   new("Cling Grip", FlagType.Ability) },
             { nameof(PlayerData.hasHarpoonDash),                new("Clawline", FlagType.Ability) },
@@ -109,12 +116,11 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.visitedUpperSlab),              new("", FlagType.Map) },
             { nameof(PlayerData.SeenBelltownCutscene),          new("", FlagType.Map) },
             { nameof(PlayerData.ShakraFinalQuestAppear),        new("", FlagType.Map) },
-            //{ nameof(PlayerData.citadelWoken),                  new("", FlagType.Map) },
 
             // Pins
             { nameof(PlayerData.hasPinBench),               new("Bench Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinCocoon),              new("Cocoon Pin", FlagType.Pin) },
-            { nameof(PlayerData.hasPinShop),                new("Shop Pins", FlagType.Pin) },
+            { nameof(PlayerData.hasPinShop),                new("Vendor Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinSpa),                 new("Spa Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinStag),                new("Bellway Pins", FlagType.Pin) },
             { nameof(PlayerData.hasPinTube),                new("Ventrica Pins", FlagType.Pin) },
@@ -223,6 +229,7 @@ namespace BasicItemSync.Data
             { nameof(PlayerData.BelltownHouseUnlocked),         new("Bellhome", FlagType.Progression) },
             { nameof(PlayerData.collectedWardBossKey),          new("Whiteward Boss Key", FlagType.Progression) },
             { nameof(PlayerData.wokeSongChevalier),             new("Second Sentinel", FlagType.Progression) },
+            { nameof(PlayerData.citadelWoken),                  new("", FlagType.Progression) },
 
             // Collectable Items
             { nameof(PlayerData.PurchasedBonebottomFaithToken),     new("", FlagType.Collectable) },

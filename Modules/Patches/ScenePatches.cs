@@ -1,4 +1,5 @@
-﻿using BasicItemSync.Modules.Network.Client;
+﻿using BasicItemSync.Data;
+using BasicItemSync.Modules.Network.Client;
 using HarmonyLib;
 using System.Linq;
 using UnityEngine.SceneManagement;
@@ -33,7 +34,7 @@ internal class ScenePatches
         
         if (!canHeart && canBoss)
         {
-            if (!SceneData.instance.PersistentBools.TryGetValue(scene.name, "Silk Heart", out var persistent)) return;
+            if (!SceneData.instance.PersistentBools.TryGetValue(scene.name, ItemNames.SilkHeart, out var persistent)) return;
             if (persistent.Value) return;
             
             var heart = scene.GetRootGameObjects().FirstOrDefault(obj => obj.name == "Silk Heart");

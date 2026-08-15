@@ -1,4 +1,5 @@
-﻿using BasicItemSync.Modules.Network.Client;
+﻿using BasicItemSync.Data;
+using BasicItemSync.Modules.Network.Client;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -80,7 +81,7 @@ internal class EventHooks
 
         if (canHeart && !canBoss)
         {
-            if (!SceneData.instance.PersistentBools.TryGetValue("Bone_05", "Silk Heart", out var persistent))
+            if (!SceneData.instance.PersistentBools.TryGetValue("Bone_05", ItemNames.SilkHeart, out var persistent))
             {
                 Log.LogDebug($"[CLI] No silk heart persistent for Bone_05");
                 return;

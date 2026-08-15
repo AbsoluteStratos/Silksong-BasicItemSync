@@ -1,4 +1,5 @@
-﻿using Silksong.AssetHelper.ManagedAssets;
+﻿using BasicItemSync.Data;
+using Silksong.AssetHelper.ManagedAssets;
 using System.Collections;
 using UnityEngine;
 
@@ -84,7 +85,7 @@ namespace BasicItemSync.Modules
         }
         public static bool UpgradeSilkHeart(string scene)
         {
-            if (SceneData.instance.PersistentBools.TryGetValue(scene, "Silk Heart", out var persistent))
+            if (SceneData.instance.PersistentBools.TryGetValue(scene, ItemNames.SilkHeart, out var persistent))
             {
                 if (persistent.Value)
                 {
@@ -101,7 +102,7 @@ namespace BasicItemSync.Modules
             Log.LogDebug($"[CLI] Collecting silk heart for {scene}");
             SceneData.instance.PersistentBools.SetValue(new PersistentItemData<bool>
             {
-                ID = "Silk Heart",
+                ID = ItemNames.SilkHeart,
                 SceneName = scene,
                 IsSemiPersistent = false,
                 Value = true,
