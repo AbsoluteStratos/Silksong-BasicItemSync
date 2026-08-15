@@ -1,9 +1,17 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 namespace BasicItemSync.Modules
 {
     internal class PersistentHandler
     {
+        static readonly List<string> FsmEvents = [
+            "QUICK BREAK",
+            "ACTIVATE",
+            "ACTIVATED",
+            "DESTROY",
+            "UNLOCK"
+        ];
         public static void SetPersistentIntData(string sceneName, string id, int status, FlagType flagType)
         {
 
@@ -93,9 +101,12 @@ namespace BasicItemSync.Modules
             else if (item.fsm)
             {
                 item.SetValueOnFSM(item.fsm, status);
-                item.fsm.SendEvent("QUICK BREAK");
-                item.fsm.SendEvent("ACTIVATE");
-                item.fsm.SendEvent("DESTROY");
+                var state = item.fsm.ActiveStateName;
+
+                foreach (var fsmEvent in FsmEvents)
+                {
+                    if (item.fsm.ActiveStateName == state) item.fsm.SendEvent(fsmEvent);
+                }
             }
             else if (item.TryGetComponent<PersistentBoolItemResponder>(out var responder))
             {
