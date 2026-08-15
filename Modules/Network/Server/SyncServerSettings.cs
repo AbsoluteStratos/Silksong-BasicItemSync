@@ -24,7 +24,7 @@ namespace BasicItemSync.Modules.Network.Server
         public bool SyncUpgrades = true;
         public bool SyncTransit = true;
         public bool SyncShortcuts = true;
-        public bool SyncSpendingCurrency = true;
+        public bool SyncSpendingCurrency = false;
 
         public bool FlagAllowed(FlagType flag)
         {

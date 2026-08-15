@@ -78,10 +78,10 @@ internal class NetworkReceiver
         SyncPlugin.AddNextFrameAction(() =>
         {
             ClientState.LastCurrency = packet.Rosaries;
-            if (packet.Rosaries > 0) CurrencyManager.AddGeo(packet.Rosaries);
+            if (packet.Rosaries != 0) CurrencyManager.AddGeo(packet.Rosaries);
 
             ClientState.LastCurrency = packet.Shards;
-            if (packet.Shards > 0) CurrencyManager.AddShards(packet.Shards);
+            if (packet.Shards != 0) CurrencyManager.AddShards(packet.Shards);
             
             ClientState.LastCurrency = 0;
         });

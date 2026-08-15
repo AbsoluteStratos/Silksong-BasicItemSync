@@ -11,7 +11,6 @@ internal class CurrencyManagerHook
     public static void ChangeCurrency(int amount, CurrencyType type)
     {
         Log.LogDebug($"[CLI: CURRENCY] {amount} {type}s added");
-
         if (amount < 1)
         {
             if (!ClientAddon.Settings.SyncSpendingCurrency) return;
