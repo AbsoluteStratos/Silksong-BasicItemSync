@@ -1,4 +1,5 @@
-﻿using BasicItemSync.Modules.Network.Client;
+﻿using BasicItemSync.Data;
+using BasicItemSync.Modules.Network.Client;
 using HarmonyLib;
 
 namespace BasicItemSync.Modules.Hooks;
@@ -35,11 +36,14 @@ internal static class ShopItemHook
 
         if (item is ToolBase) return;
 
+        Log.LogInfo($"[CLI: ShopItemHook] Item: {item.name}");
+
         ClientState.LastItem = item.name;
-        if (item.name == "Heart Piece") return; //NetworkSender.SendUpgrade("", FlagType.Mask);
-        else if (item.name == "Silk Spool") return; // NetworkSender.SendUpgrade("", FlagType.Spool);
-        else if (item.name == "Tool Pouch Pickup") NetworkSender.SendUpgrade("", FlagType.Pouch);
-        else if (item.name == "Took Kit Pickup") NetworkSender.SendUpgrade("", FlagType.CraftingKit);
+        if (item.name == ItemNames.MaskShard) return; //NetworkSender.SendUpgrade("", FlagType.Mask);
+        else if (item.name == ItemNames.SpoolShard) return; // NetworkSender.SendUpgrade("", FlagType.Spool);
+        else if (item.name == ItemNames.ToolPouch) NetworkSender.SendUpgrade("", FlagType.Pouch);
+        else if (item.name == ItemNames.CraftingKit) NetworkSender.SendUpgrade("", FlagType.CraftingKit);
+        else if (item.name == ItemNames.NeedleUpgrade) NetworkSender.SendUpgrade("", FlagType.Needle);
         else NetworkSender.SendCollectable(item.name, item.GetPopupName(), 1);
     }
 
