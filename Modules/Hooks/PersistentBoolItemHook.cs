@@ -301,7 +301,6 @@ internal class PersistentBoolItemHook
         FlagType flagType;
 
         var commonId = Regex.Replace(id.ToLower(), " ?\\((\\d+|Clone)\\)$", "");
-        Log.LogDebug(scene, id, commonId);
         if (__instance.TryGetComponent<Gate>(out var _)) flagType = FlagType.Shortcut;
         else if (__instance.TryGetComponent<CollectableItemPickup>(out var pickup))
         {
@@ -328,14 +327,20 @@ internal class PersistentBoolItemHook
         NetworkSender.AddPersistentBoolData(id, scene, value, flagType);
     }
 
-    public static void UpdateValue(PersistentBoolItem persistent, bool value = true)
+    public static void UpdateValue(PersistentBoolItem? persistent)
     {
         if (persistent == null) return;
         persistent.SaveState();
 
-        //var preValue = persistent.ItemData.Value;
-        //persistent.ItemData.Value = value;
-        //SaveStateNoConditionPostfix(persistent, preValue);
+    }
+
+    public static void UpdateValue(PersistentBoolItem? persistent, bool value)
+    {
+        if (!persistent) return;
+
+        var preValue = persistent.ItemData.Value;
+        persistent.ItemData.Value = value;
+        SaveStateNoConditionPostfix(persistent, preValue);
     }
 }
 
@@ -345,7 +350,7 @@ internal static class LeverHook
 {
     [HarmonyPatch(nameof(Lever.Hit))]
     [HarmonyPostfix]
-    public static void Hit(Lever __instance, ref IHitResponder.HitResponse __result)
+    static void Hit(Lever __instance, ref IHitResponder.HitResponse __result)
     {
         if (__result.response == IHitResponder.Response.None || __instance.doesNotActivate) return;
         var boolName = __instance.playerDataBool;
@@ -365,28 +370,28 @@ internal static class Lever_tk2dHook
 {
     [HarmonyPatch(nameof(Lever_tk2d.Hit))]
     [HarmonyPrefix]
-    public static void Hit(Lever_tk2d __instance, HitInstance damageInstance)
+    static void HitPre(Lever_tk2d __instance, HitInstance damageInstance, out PersistentBoolItem? __state)
     {
+        __state = null;
         var damage = damageInstance;
         if (!damage.IsNailDamage || (__instance.canHitTrigger && !__instance.canHitTrigger.IsInside) || __instance.activated) return;
 
         if (__instance.TryGetComponent<PersistentBoolItem>(out var persistent))
         {
-            PersistentBoolItemHook.UpdateValue(persistent);
+            __state = persistent;
         }
     }
+    [HarmonyPatch(nameof(Lever_tk2d.Hit))]
+    [HarmonyPostfix]
+    static void HitPost(PersistentBoolItem? __state) => PersistentBoolItemHook.UpdateValue(__state);
 }
 
 [HarmonyPatch(typeof(Unmasker))]
 internal static class UnmaskerHook
 {
     [HarmonyPatch(nameof(Unmasker.Uncover))]
-    [HarmonyPrefix]
-    public static void Uncover(Unmasker __instance)
-    {
-        if (__instance.isUncovered) return;
-        PersistentBoolItemHook.UpdateValue(__instance.persistent);
-    }
+    [HarmonyPostfix]
+    static void Uncover(Unmasker __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
 }
 
 [HarmonyPatch(typeof(TriggerActivateGameObject))]
@@ -394,9 +399,16 @@ internal static class TriggerActivateGameObjectHook
 {
     [HarmonyPatch(nameof(TriggerActivateGameObject.OnInsideStateChanged))]
     [HarmonyPrefix]
-    public static void OnInsideStateChanged(TriggerActivateGameObject __instance, bool isInside)
+    static void OnInsideStateChangedPre(TriggerActivateGameObject __instance, bool isInside, out bool __state)
     {
-        if (__instance.hasActivated || !isInside) return;
+        __state = !__instance.hasActivated && isInside;
+    }
+
+    [HarmonyPatch(nameof(TriggerActivateGameObject.OnInsideStateChanged))]
+    [HarmonyPostfix]
+    static void OnInsideStateChangedPost(TriggerActivateGameObject __instance, bool isInside, bool __state)
+    {
+        if (!__state) return;
         PersistentBoolItemHook.UpdateValue(__instance.activateOncePersistent);
     }
 }
@@ -405,8 +417,8 @@ internal static class TriggerActivateGameObjectHook
 internal static class TrapdoorHook
 {
     [HarmonyPatch(nameof(Trapdoor.DoOpenDoor))]
-    [HarmonyPrefix]
-    public static void DoOpenDoor(Trapdoor __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
+    [HarmonyPostfix]
+    static void DoOpenDoor(Trapdoor __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent, true);
     
 }
 
@@ -414,12 +426,8 @@ internal static class TrapdoorHook
 internal static class TrapBridgeExtendHook
 {
     [HarmonyPatch(nameof(TrapBridgeExtend.UnlockLevers))]
-    [HarmonyPrefix]
-    public static void DoOpenDoor(TrapBridgeExtend __instance)
-    {
-        if (__instance.activated) return;
-        PersistentBoolItemHook.UpdateValue(__instance.persistent);
-    }
+    [HarmonyPostfix]
+    static void UnlockLevers(TrapBridgeExtend __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
 }
 
 [HarmonyPatch(typeof(TimelineGate))]
@@ -427,11 +435,18 @@ internal static class TimelineGateHook
 {
     [HarmonyPatch(nameof(TimelineGate.Open))]
     [HarmonyPrefix]
-    public static void DoOpenDoor(TimelineGate __instance)
+    static void OpenPre(TimelineGate __instance, out PersistentBoolItem? __state)
     {
+        __state = null;
         if (__instance.activated || !__instance.TryGetComponent<PersistentBoolItem>(out var persistent)) return;
+        __state = persistent;
+        
         PersistentBoolItemHook.UpdateValue(persistent);
     }
+
+    [HarmonyPatch(nameof(TimelineGate.Open))]
+    [HarmonyPostfix]
+    static void OpenPost(PersistentBoolItem? __state) => PersistentBoolItemHook.UpdateValue(__state);
 }
 
 
@@ -440,13 +455,22 @@ internal static class SuspendedPlatformBaseHook
 {
     [HarmonyPatch(nameof(SuspendedPlatformBase.CutDown))]
     [HarmonyPrefix]
-    public static void CutDown(SuspendedPlatformBase __instance)
+    static void CutDownPre(SuspendedPlatformBase __instance, out bool __state)
     {
+        __state = false;
         if (__instance.activated || !__instance.persistent) return;
         if (__instance is SuspendedSwayPlat sus && sus.activated) return;
+        __state = true;
+    }
 
+    [HarmonyPatch(nameof(SuspendedPlatformBase.CutDown))]
+    [HarmonyPostfix]
+    static void CutDown(SuspendedPlatformBase __instance, bool __state)
+    {
+        if (!__state) return;
         PersistentBoolItemHook.UpdateValue(__instance.persistent);
     }
+
 }
 
 // Already calls SaveState();
@@ -455,7 +479,7 @@ internal static class SuspendedPlatformBaseHook
 //{
 //    [HarmonyPatch(nameof(SilkGrubCocoon.SetBroken))]
 //    [HarmonyPrefix]
-//    public static void SetBroken(SilkGrubCocoon __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
+//    static void SetBroken(SilkGrubCocoon __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
 //}
 
 [HarmonyPatch(typeof(Remasker))]
@@ -463,10 +487,10 @@ internal static class RemaskerHook
 {
     [HarmonyPatch(nameof(Remasker.FadeWatch))]
     [HarmonyPrefix]
-    public static void FadeWatch(Remasker __instance)
+    static void FadeWatchPre(Remasker __instance)
     {
-        if (__instance.IsCovered || !__instance.persistent || __instance.hasBeenUncovered) return;
-        PersistentBoolItemHook.UpdateValue(__instance.persistent);
+        if (__instance.IsCovered || __instance.hasBeenUncovered || !__instance.persistent) return;
+        PersistentBoolItemHook.UpdateValue(__instance.persistent, true);
     }
 }
 
@@ -474,20 +498,20 @@ internal static class RemaskerHook
 internal static class ManualLiftHook
 {
     [HarmonyPatch(nameof(ManualLift.Unlock))]
-    [HarmonyPrefix]
-    public static void Unlock(ManualLift __instance) => PersistentBoolItemHook.UpdateValue(__instance.unlockPersistent);
+    [HarmonyPostfix]
+    static void Unlock(ManualLift __instance) => PersistentBoolItemHook.UpdateValue(__instance.unlockPersistent, true);
 }
 
 [HarmonyPatch(typeof(LiftControl))]
 internal static class LiftControlHook
 {
     [HarmonyPatch(nameof(LiftControl.Unlock))]
-    [HarmonyPrefix]
-    public static void Unlock(ManualLift __instance) => PersistentBoolItemHook.UpdateValue(__instance.unlockPersistent);
+    [HarmonyPostfix]
+    static void Unlock(ManualLift __instance) => PersistentBoolItemHook.UpdateValue(__instance.unlockPersistent);
 
     [HarmonyPatch(nameof(LiftControl.SetUnlocked))]
-    [HarmonyPrefix]
-    public static void SetUnlocked(ManualLift __instance, bool value) => PersistentBoolItemHook.UpdateValue(__instance.unlockPersistent, value);
+    [HarmonyPostfix]
+    static void SetUnlocked(ManualLift __instance) => PersistentBoolItemHook.UpdateValue(__instance.unlockPersistent);
 }
 
 
@@ -496,15 +520,23 @@ internal static class GateHook
 {
     [HarmonyPatch(nameof(Gate.Open))]
     [HarmonyPrefix]
-    public static void Open(Gate __instance)
+    static void OpenPre(Gate __instance, out PersistentBoolItem? __state)
     {
+        __state = null;
         if (__instance.startState == Gate.StartStates.StartOpen && !__instance.isClosed || !__instance.activated || !__instance.TryGetComponent<PersistentBoolItem>(out var persistent)) return;
-        PersistentBoolItemHook.UpdateValue(persistent);
+        __state = persistent;
+    }
+
+    [HarmonyPatch(nameof(Gate.Open))]
+    [HarmonyPostfix]
+    static void OpenPost(PersistentBoolItem? __state)
+    {
+        PersistentBoolItemHook.UpdateValue(__state);
     }
 
     [HarmonyPatch(nameof(Gate.Opened))]
-    [HarmonyPrefix]
-    public static void Opened(Gate __instance)
+    [HarmonyPostfix]
+    static void Opened(Gate __instance)
     {
         if (!__instance.TryGetComponent<PersistentBoolItem>(out var persistent)) return;
         PersistentBoolItemHook.UpdateValue(persistent);
@@ -516,9 +548,16 @@ internal static class ExtenderPlatsControllerHook
 {
     [HarmonyPatch(nameof(ExtenderPlatsController.Unfold))]
     [HarmonyPrefix]
-    public static void Unfold(ExtenderPlatsController __instance)
+    static void UnfoldPre(ExtenderPlatsController __instance, out bool __state)
     {
-        if (!__instance.isActiveAndEnabled || __instance.isUnfolded) return;
+        __state = __instance.isActiveAndEnabled || !__instance.isUnfolded;
+    }
+
+    [HarmonyPatch(nameof(ExtenderPlatsController.Unfold))]
+    [HarmonyPrefix]
+    static void UnfoldPost(ExtenderPlatsController __instance, bool __state)
+    {
+        if (!__state) return;
         PersistentBoolItemHook.UpdateValue(__instance.persistent);
     }
 }
@@ -527,34 +566,24 @@ internal static class ExtenderPlatsControllerHook
 internal static class CrankPlatHook
 {
     [HarmonyPatch(nameof(CrankPlat.SetComplete))]
-    [HarmonyPrefix]
-    public static void SetComplete(CrankPlat __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
+    [HarmonyPostfix]
+    static void SetComplete(CrankPlat __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
 }
 
 [HarmonyPatch(typeof(CogCylinderPuzzle))]
 internal static class CogCylinderPuzzleHook
 {
-    [HarmonyPatch(nameof(CogCylinderPuzzle.CheckComplete))]
+    [HarmonyPatch(nameof(CogCylinderPuzzle.Complete))]
     [HarmonyPrefix]
-    public static void CheckComplete(CogCylinderPuzzle __instance)
-    {
-        if (__instance.isComplete) return;
-        if (__instance.readCogs.Any(c => !c.IsInTargetPos)) return;
-
-        PersistentBoolItemHook.UpdateValue(__instance.persistent);
-    }
+    static void Complete(CogCylinderPuzzle __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
 }
 
 [HarmonyPatch(typeof(Breakable))]
 internal static class BreakableHook
 {
     [HarmonyPatch(nameof(Breakable.Break))]
-    [HarmonyPrefix]
-    public static void Break(Breakable __instance)
-    {
-        if (__instance.isBroken) return;
-        PersistentBoolItemHook.UpdateValue(__instance.persistent);
-    }
+    [HarmonyPostfix]
+    static void Break(Breakable __instance) => PersistentBoolItemHook.UpdateValue(__instance.persistent);
 }
 
 
@@ -563,10 +592,10 @@ internal static class BattleSceneHook
 {
     [HarmonyPatch(nameof(BattleScene.EndBattle))]
     [HarmonyPrefix]
-    public static void EndBattle(BattleScene __instance)
+    static void EndBattlePre(BattleScene __instance)
     {
         if (__instance.completed || !__instance.TryGetComponent<PersistentBoolItem>(out var persistent)) return;
-        PersistentBoolItemHook.UpdateValue(persistent);
+        PersistentBoolItemHook.UpdateValue(persistent, true);
     }
 }
 

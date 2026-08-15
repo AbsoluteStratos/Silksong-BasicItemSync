@@ -228,7 +228,7 @@ internal static class ItemReceptacleHook
         var value = true;
 
         PlayerDataHook.BoolUpdated(boolName, value);
-        PersistentBoolItemHook.UpdateValue(__instance.persistent);
+        PersistentBoolItemHook.UpdateValue(__instance.persistent, true);
     }
 }
 
