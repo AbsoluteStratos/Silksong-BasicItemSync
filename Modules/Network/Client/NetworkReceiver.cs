@@ -1,4 +1,5 @@
 ﻿using SSMP.Api.Client.Networking;
+using System.Linq;
 
 namespace BasicItemSync.Modules.Network.Client;
 
@@ -123,7 +124,15 @@ internal class NetworkReceiver
                         PlayerData.instance.SeenToolGetPrompt = true;
                         PlayerData.instance.SeenToolWeaponGetPrompt = true;
 
-                        if (packet.State) tool.Unlock();
+                        if (packet.State)
+                        {
+                            tool.Unlock();
+                            // Equip silk skill if one isn't equipped yet
+                            if (tool.Type == ToolItemType.Skill && !ToolItemManager.GetCurrentEquippedTools().Any(t => t.Type == ToolItemType.Skill))
+                            {
+                                ToolItemManager.AutoEquip(tool);
+                            }
+                        }
                         else tool.Lock();
                     }
                 }
