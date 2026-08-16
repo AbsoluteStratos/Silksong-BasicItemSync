@@ -23,33 +23,40 @@ BasicItemSync can be automatically installed by any Thunderstore compatible mod 
 ```
 /sync [module] [true/false]
 ```
-Enables or disables syncing one of the following modules. All but `QuestItems` are on by default.
-- Currency
-	- Shell Shards
-	- Rosaries
-	- Chests
-- Tools
-	- Colored tools
-	- Silk Skills
-	- Crests
-	- Vesticrest
+Enables or disables syncing one of the following modules. Unless specified, modules are on by default.
 - Abilities
 	- Movement
 	- Needolin
 	- Needle Strike
-- Battles
-	- Boss Fights
-	- Arenas
-	- Void Masses
+- Maps
+- Pins
+	- Shakra Pins
+	- Flea Pins
+- Currency
+	- Shell Shards
+	- Rosaries
+	- Chests
+	- NOT gains from cocoon
+- SpendingCurrency (Default: false)
+	- All money spent in Shops and Donations
+	- Snitchflies
+	- NOT losses on death
+- Quests
+	- Quest completion
+	- Quest rewards
+- QuestItems (Default: false)
+- Bosses
+	- + Void Masses
+- Arenas
 - Progression
 	- Key Items (Keys, Melodies, etc.)
 	- Bellshrines
 	- Toll Benches
 	- Important NPCs
+- Fleas
 - Collectables
 	- Common Items
 	- Relics
-	- Fleas
 	- Mementos
 	- Bellhome Decor
 - Upgrades
@@ -59,6 +66,11 @@ Enables or disables syncing one of the following modules. All but `QuestItems` a
 	- Crafting Kits
 	- Tool Pouches
 	- Needle Upgrades
+- Tools
+	- Colored tools
+	- Silk Skills
+- Crests
+	- Vesticrest
 - Transit
 	- Bellways
 	- Ventricas
@@ -66,11 +78,3 @@ Enables or disables syncing one of the following modules. All but `QuestItems` a
 	- Levers
 	- Pressure Plates
 	- Breakable Walls
-- Quests
-	- Quest completion
-	- Quest rewards
-- QuestItems
-- Maps
-- Pins
-	- Shakra Pins
-	- Flea Pins
