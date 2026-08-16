@@ -30,7 +30,7 @@ internal static class ShopItemHook
         var item = __instance.Item;
         if (item == null)
         {
-            Log.LogError($"[CLI: ShopItemHook] Unknown item for shop {__instance.name}");
+            Log.LogError($"[CLI: ShopItemHook] No item for shop {__instance.name}");
             return;
         }
 

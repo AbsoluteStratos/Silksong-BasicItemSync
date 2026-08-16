@@ -90,7 +90,10 @@ namespace BasicItemSync.Modules
 
             PopupItem GetMarkerPin(int index)
             {
-                var marker = map.GetChild(1).GetChild(5).GetChild(6).GetChild(index);
+                var markerGroup = map.GetChild(1).GetChild(5);
+                var specialIndex = markerGroup.childCount - 1;
+
+                var marker = markerGroup.GetChild(specialIndex).GetChild(index);
                 var pin = marker.GetComponentInChildren<SpriteRenderer>(true);
 
                 return new PopupItem(name, pin.sprite);
