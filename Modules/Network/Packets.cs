@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace BasicItemSync.Modules.Network;
 
-internal class ClientPacket : IPacketData
+internal class Packet : IPacketData
 {
     public virtual bool IsReliable => true;
     public virtual bool DropReliableDataIfNewerExists => false;
@@ -15,7 +15,7 @@ internal class ClientPacket : IPacketData
     public virtual void WriteData(IPacket packet) { }
 }
 
-internal class SendFlagPacket : ClientPacket
+internal class SendFlagPacket : Packet
 {
     public string Key = "";
     public string Name = "";
@@ -88,7 +88,7 @@ internal class SendPersistentPacket : SendFlagPacket
     }
 }
 
-internal class SendPersistentBoolsPacket : ClientPacket
+internal class SendPersistentBoolsPacket : Packet
 {
     public Dictionary<(string, string), (bool, FlagType)> Values = [];
     public override void WriteData(IPacket packet)
@@ -124,7 +124,7 @@ internal class SendPersistentBoolsPacket : ClientPacket
     }
 }
 
-internal class SendPersistentIntsPacket : ClientPacket
+internal class SendPersistentIntsPacket : Packet
 {
     public Dictionary<(string, string), (int, FlagType)> Values = [];
     public override void WriteData(IPacket packet)
@@ -194,7 +194,7 @@ internal class SendFloatItemPacket : SendFlagPacket
     }
 }
 
-internal class SendCurrencyPacket : ClientPacket
+internal class SendCurrencyPacket : Packet
 {
     public short Rosaries;
     public short Shards;
@@ -212,27 +212,27 @@ internal class SendCurrencyPacket : ClientPacket
     }
 }
 
-internal class SettingsUpdatePacket : IPacketData
+internal class SettingsUpdatePacket : Packet
 {
-    public bool IsReliable => true;
-    public bool DropReliableDataIfNewerExists => true;
+    public override bool IsReliable => true;
+    public override bool DropReliableDataIfNewerExists => true;
 
     public SyncServerSettings Settings = new();
 
-    public void WriteData(IPacket packet)
+    public override void WriteData(IPacket packet)
     {
-        var props = Settings.ToValues();
-        packet.Write(props.Count);
-        foreach (var prop in props)
+        var values = Settings.ToValues();
+        packet.Write(values.Count);
+        foreach (var prop in values)
         {
             packet.Write(prop);
         }
     }
 
-    public void ReadData(IPacket packet)
+    public override void ReadData(IPacket packet)
     {
-        var len = packet.ReadInt();
         List<bool> values = [];
+        var len = packet.ReadInt();
         for (var i = 0; i < len; i++)
         {
             values.Add(packet.ReadBool());
@@ -267,7 +267,7 @@ internal static class PacketInstantiate
     }
 }
 
-internal class ErrorThrowingPacket : ClientPacket
+internal class ErrorThrowingPacket : Packet
 {
     public ErrorThrowingPacket(Packets id, bool server)
     {

@@ -19,12 +19,13 @@ internal class ServerAddon : SSMP.Api.Server.ServerAddon
     {
         Log.SetLogger(Logger);
         Log.LogInfo("Item Sync Server Addon enabled");
-        Settings = SyncServerSettings.ReadFromFile();
+
         Instance = this;
         api = serverApi;
+        Settings = SyncServerSettings.ReadFromFile();
 
-        ServerApi.CommandManager.RegisterCommand(new SettingCommand(Settings));
         NetworkForwarder.Initialize();
+        ServerApi.CommandManager.RegisterCommand(new SettingCommand(Settings));
         api.ServerManager.PlayerConnectEvent += OnPlayerConnect;
     }
 

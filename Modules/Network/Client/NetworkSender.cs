@@ -1,4 +1,6 @@
 ﻿using SSMP.Api.Client.Networking;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BasicItemSync.Modules.Network.Client
 {
@@ -14,7 +16,7 @@ namespace BasicItemSync.Modules.Network.Client
             Sender = ClientAddon.api.NetClient.GetNetworkSender<Packets>(ClientAddon.Instance);
         }
 
-        static void SendData(Packets type, ClientPacket packet)
+        static void SendCollectionData(Packets type, Packet packet)
         {
             if (!ClientAddon.api.NetClient.IsConnected || Sender == null)
             {
@@ -29,6 +31,23 @@ namespace BasicItemSync.Modules.Network.Client
 
             Log.LogDebug($"[CLI] Sending {type}");
             Sender.SendCollectionData(type, packet);
+        }
+
+        static void SendSingleData(Packets type, Packet packet)
+        {
+            if (!ClientAddon.api.NetClient.IsConnected || Sender == null)
+            {
+                Log.LogDebug("Not connected");
+                return;
+            }
+
+            if (packet is SendFlagPacket flagPacket && !CanSync(flagPacket.FlagType))
+            {
+                return;
+            }
+
+            Log.LogDebug($"[CLI] Sending {type}");
+            Sender.SendSingleData(type, packet);
         }
 
         static bool CanSync(FlagType flagType)
@@ -55,7 +74,7 @@ namespace BasicItemSync.Modules.Network.Client
         {
             if (RosariesToSend == 0 && ShardsToSend == 0) return;
 
-            SendData(Packets.Currency, new SendCurrencyPacket
+            SendCollectionData(Packets.Currency, new SendCurrencyPacket
             {
                 Rosaries = (short)RosariesToSend,
                 Shards = (short)ShardsToSend,
@@ -69,12 +88,12 @@ namespace BasicItemSync.Modules.Network.Client
         {
             if (PersistentBoolsToSend.Values.Count > 0)
             {
-                SendData(Packets.PersistentBool, PersistentBoolsToSend);
+                SendCollectionData(Packets.PersistentBool, PersistentBoolsToSend);
             }
 
             if (PersistentIntsToSend.Values.Count > 0)
             {
-                SendData(Packets.PersistentInt, PersistentIntsToSend);
+                SendCollectionData(Packets.PersistentInt, PersistentIntsToSend);
             }
 
             PersistentBoolsToSend = new();
@@ -83,7 +102,7 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendFlag(string playerDataKey, FlagType flagType, string name, bool state = true)
         {
-            SendData(Packets.BoolPlayerData, new SendBoolItemPacket
+            SendCollectionData(Packets.BoolPlayerData, new SendBoolItemPacket
             {
                 Key = playerDataKey,
                 Name = name,
@@ -94,7 +113,7 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendInt(string playerDataKey, FlagType flagType, string name, int state)
         {
-            SendData(Packets.IntPlayerData, new SendIntItemPacket
+            SendCollectionData(Packets.IntPlayerData, new SendIntItemPacket
             {
                 Key = playerDataKey,
                 Name = name,
@@ -105,7 +124,7 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendQuestComplete(string internalName, string displayName)
         {
-            SendData(Packets.Quest, new SendBoolItemPacket
+            SendCollectionData(Packets.Quest, new SendBoolItemPacket
             {
                 Key = internalName,
                 Name = displayName,
@@ -116,7 +135,7 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendTool(string toolName, string displayName, bool state, bool isCrest)
         {
-            SendData(Packets.Tool, new SendBoolItemPacket
+            SendCollectionData(Packets.Tool, new SendBoolItemPacket
             {
                 Key = toolName,
                 Name = displayName,
@@ -127,7 +146,7 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendUpgrade(string sceneName, FlagType upgradeType)
         {
-            SendData(Packets.Upgrade, new SendFlagPacket
+            SendCollectionData(Packets.Upgrade, new SendFlagPacket
             {
                 Key = sceneName,
                 Name = "",
@@ -137,7 +156,7 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendCollectable(string key, string itemName, int amount, FlagType flagType = FlagType.Collectable)
         {
-            SendData(Packets.Collectable, new SendIntItemPacket
+            SendCollectionData(Packets.Collectable, new SendIntItemPacket
             {
                 Key = key,
                 Name = itemName,
@@ -164,6 +183,20 @@ namespace BasicItemSync.Modules.Network.Client
             PersistentBoolsToSend.Values[(scene, id)] = (value, flagType);
 
             if (PersistentBoolsToSend.Values.Count == 1 && PersistentIntsToSend.Values.Count == 0) SyncPlugin.AddNextFrameAction(SendPendingPersistents);
+        }
+
+        public static void SendSettings(Dictionary<string, bool> settings)
+        {
+            foreach (var setting in settings)
+            {
+                Log.LogDebug(setting.Key, setting.Value);
+            }
+            var packet = new SettingsUpdatePacket
+            {
+                Settings = Server.SyncServerSettings.PopulateFromValues(settings.Values.ToList())
+            };
+
+            SendSingleData(Packets.Settings, packet);
         }
     }
 }

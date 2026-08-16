@@ -24,9 +24,11 @@ internal class NetworkForwarder
         Receiver.RegisterPacketHandler<SendIntItemPacket>(Packets.Collectable, OnCollectable);
         Receiver.RegisterPacketHandler<SendPersistentBoolsPacket>(Packets.PersistentBool, OnPersistentBool);
         Receiver.RegisterPacketHandler<SendPersistentIntsPacket>(Packets.PersistentInt, OnPersistentInt);
+
+        Receiver.RegisterPacketHandler<SettingsUpdatePacket>(Packets.Settings, OnSettings);
     }
 
-    static void Broadcast(ushort senderId, Packets type, ClientPacket packet)
+    static void Broadcast(ushort senderId, Packets type, Packet packet)
     {
         if (Sender == null) return;
 
@@ -144,4 +146,19 @@ internal class NetworkForwarder
         Broadcast(id, type, packet);
     }
 
+    static void OnSettings(ushort id, SettingsUpdatePacket packet)
+    {
+        if (!ServerAddon.api.ServerManager.TryGetPlayer(id, out var player))
+        {
+            return;
+        }
+        if (!player.IsAuthorized) {
+            ServerAddon.api.ServerManager.SendMessage(player, "You aren't authorized to change settings.");
+            return;
+        }
+
+        ServerAddon.Settings.CopyFrom(packet.Settings);
+        ServerAddon.Settings.SaveToFile();
+        SendSettingsUpdate();
+    }
 }

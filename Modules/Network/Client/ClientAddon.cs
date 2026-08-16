@@ -32,6 +32,7 @@ internal class ClientAddon : SSMP.Api.Client.ClientAddon
         NetworkSender.Initialize();
         NetworkReceiver.Initialize();
 
+        api.CommandManager.RegisterCommand(new SettingUICommand(Settings));
         api.ClientManager.ConnectEvent += OnConnect;
         api.ClientManager.DisconnectEvent += OnDisconnect;
     }
@@ -39,7 +40,7 @@ internal class ClientAddon : SSMP.Api.Client.ClientAddon
     void OnConnect()
     {
         EventHooks.Initialize();
-        Settings = new();
+        Settings.CopyFrom(new());
 
         api.UiManager.ChatBox.AddMessage("BasicItemSync is in beta. Please report any bugs to the link on the mod page.");
 

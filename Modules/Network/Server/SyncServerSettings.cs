@@ -79,7 +79,7 @@ namespace BasicItemSync.Modules.Network.Server
             return output;
         }
 
-        static List<FieldInfo> GetProperties()
+        public static List<FieldInfo> GetProperties()
         {
             var props = typeof(SyncServerSettings).GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).ToList();
             props.Sort((a, b) => a.Name.CompareTo(b.Name));
@@ -100,18 +100,17 @@ namespace BasicItemSync.Modules.Network.Server
         {
             var instance = new SyncServerSettings();
             var props = GetProperties();
-            var minLen = Math.Min(props.Count, values.Count);
 
-            if (minLen != props.Count)
+            if (props.Count != values.Count)
             {
                 Log.LogWarning("Mismatched server setting property count");
             }
 
-            for (var i = 0; i < minLen; i++)
+            for (var i = 0; i < props.Count; i++)
             {
                 var prop = props[i];
                 var value = values[i];
-                prop.SetValue(instance, value);
+                instance.SetVariable(prop.Name, value);
             }
 
             return instance;
