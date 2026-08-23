@@ -1,5 +1,4 @@
-﻿using GenericVariableExtension;
-using SSMP.Api.Command.Server;
+﻿using SSMP.Api.Command.Server;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -46,7 +45,7 @@ namespace BasicItemSync.Modules.Network.Server
 
             if (arguments.Length == 2)
             {
-                var value = Settings.GetVariable<bool>(setting.Name);
+                var value = (bool)setting.GetValue(Settings);
                 commandSender.SendMessage($"Setting '{setting.Name}' is currently {value}");
             }
             else
@@ -59,7 +58,7 @@ namespace BasicItemSync.Modules.Network.Server
                     SendUsage();
                     return;
                 }
-                Settings.SetVariable(setting.Name, value);
+                setting.SetValue(Settings, value);
                 Settings.SaveToFile();
                 NetworkForwarder.SendSettingsUpdate();
             }

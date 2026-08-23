@@ -1,5 +1,4 @@
-﻿using GenericVariableExtension;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,7 +72,7 @@ namespace BasicItemSync.Modules.Network.Server
 
             foreach (var prop in props)
             {
-                output.Add(this.GetVariable<bool>(prop.Name));
+                output.Add((bool)prop.GetValue(this));
             }
 
             return output;
@@ -92,7 +91,7 @@ namespace BasicItemSync.Modules.Network.Server
             var props = GetProperties();
             foreach (var prop in props)
             {
-                this.SetVariable(prop.Name, settings.GetVariable<bool>(prop.Name));
+                prop.SetValue(this, prop.GetValue(settings));
             }
         }
 
@@ -110,7 +109,7 @@ namespace BasicItemSync.Modules.Network.Server
             {
                 var prop = props[i];
                 var value = values[i];
-                instance.SetVariable(prop.Name, value);
+                prop.SetValue(instance, value);
             }
 
             return instance;
