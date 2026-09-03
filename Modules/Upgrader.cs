@@ -57,8 +57,16 @@ namespace BasicItemSync.Modules
             var collectable = CollectableItemManager.GetItemByName(itemKey);
             if (!collectable)
             {
-                Log.LogError($"Unknown collectable {itemKey}");
-                return false;
+                var relic = CollectableRelicManager.GetRelic(itemKey);
+
+                if (!relic)
+                {
+                    Log.LogError($"Unknown collectable {itemKey}");
+                    return false;
+                }
+
+                relic.Get(false);
+                return Save();
             }
 
             collectable.AddAmount(amount);
