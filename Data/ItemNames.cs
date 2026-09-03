@@ -17,6 +17,8 @@ namespace BasicItemSync.Data
         public const string ToolPouch = "Tool Pouch Pickup";
         public const string CraftingKit = "Tool Kit Pickup";
         public const string NeedleUpgrade = "Needle Upgrade";
+        public const string MoneyReward = "Money Reward";
+        public const string ShardsReward = "Shards Reward";
 
         public static Dictionary<string, Key> BoolKeys = new()
         {

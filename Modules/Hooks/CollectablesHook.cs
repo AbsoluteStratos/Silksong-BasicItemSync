@@ -11,7 +11,7 @@ internal class CollectableItemPickupHook
     {
         { "Ant Trapper Item", FlagType.QuestItem },
         { "Architect Key", FlagType.Progression },
-        { "Beastfly Remainss", FlagType.QuestItem },
+        { "Beastfly Remains", FlagType.QuestItem },
         { "Belltown House Key", FlagType.Progression },
         { "Blue Goop Jar", FlagType.QuestItem },
         { "Broken SilkShot", FlagType.Tool },
