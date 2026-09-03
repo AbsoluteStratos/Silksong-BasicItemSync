@@ -1,6 +1,12 @@
 # Changelog
 
 ## 0.1
+### 0.1.2
+- Added `/sync-ui` for easier access to settings
+- Fixed a bug where sliding platforms in Whispering Vaults would reset upon leaving the room
+- Fixed a bug that prevented syncing relic pickups
+- Fixed map marker icons in lower left notifications
+
 ### 0.1.1
 - Fixed sending and receiving some persistent objects (i.e. shortcuts)
 - Better alerts for some items/upgrades
