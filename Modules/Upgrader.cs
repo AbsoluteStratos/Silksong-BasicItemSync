@@ -97,7 +97,7 @@ namespace BasicItemSync.Modules
             {
                 if (persistent.Value)
                 {
-                    Log.LogDebug($"[CLI] Already collected silk heart for {scene}");
+                    Log.LogDebug($"[CLI: Upgrade Silk Heart] Already collected silk heart for {scene}");
                     return false;
                 }
             }
@@ -107,7 +107,7 @@ namespace BasicItemSync.Modules
 
             PlayerData.instance.silkRegenMax++;
 
-            Log.LogDebug($"[CLI] Collecting silk heart for {scene}");
+            Log.LogDebug($"[CLI: Upgrade Silk Heart] Collecting silk heart for {scene}");
             SceneData.instance.PersistentBools.SetValue(new PersistentItemData<bool>
             {
                 ID = ItemNames.SilkHeart,

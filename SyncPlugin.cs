@@ -1,3 +1,4 @@
+using BasicItemSync.Modules;
 using BasicItemSync.Modules.Network.Client;
 using BasicItemSync.Modules.Network.Server;
 using BepInEx;
@@ -24,6 +25,7 @@ namespace BasicItemSync
         {
             // Put your initialization logic here
             Instance = this;
+            ModSettings.Init(Config);
 
             Logger.LogInfo($"Plugin {Name} ({Id}) has loaded!");
             SSMP.Api.Client.ClientAddon.RegisterAddon(new ClientAddon());

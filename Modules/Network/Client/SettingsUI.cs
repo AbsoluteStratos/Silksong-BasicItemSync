@@ -23,7 +23,6 @@ namespace BasicItemSync.Modules.Network.Client
             foreach (var prop in SyncServerSettings.GetProperties())
             {
                 SettingValues[prop.Name] = Settings.GetVariable<bool>(prop.Name);
-                Log.LogDebug(prop.Name, SettingValues[prop.Name]);
             }
         }
 

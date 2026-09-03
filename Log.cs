@@ -1,4 +1,5 @@
-﻿using SSMP.Logging;
+﻿using BasicItemSync.Modules;
+using SSMP.Logging;
 
 namespace BasicItemSync;
 
@@ -60,10 +61,11 @@ internal static class Log
     }
     public static void LogDebug(params object[] data)
     {
-#if DEBUG
-        foreach (object obj in data)
-            logger.Debug(obj.ToString());
-#endif
+        if (ModSettings.DebugLogs)
+        {
+            foreach (object obj in data)
+                logger.Debug(obj.ToString());
+        }
     }
     public static void LogMessage(params object[] data)
     {
