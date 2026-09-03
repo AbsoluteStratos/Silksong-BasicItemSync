@@ -83,13 +83,6 @@ internal class PersistentIntItemHook
 [HarmonyPatch(typeof(HitSlidePlatform))]
 internal static class HitSlidePlatformHook
 {
-    [HarmonyPatch(nameof(HitSlidePlatform.SetAtNode), typeof(int))]
-    [HarmonyPostfix]
-    public static void SetAtNode(HitSlidePlatform __instance, int nodeIndex)
-    {
-        PersistentIntItemHook.UpdateValue(__instance.persistent, nodeIndex);
-    }
-
     [HarmonyPatch(nameof(HitSlidePlatform.OnHit))]
     [HarmonyPrefix]
     public static void OnHitPrefix(HitSlidePlatform __instance, out int __state)
