@@ -20,7 +20,7 @@ namespace BasicItemSync.Modules.Network.Client
         {
             if (!ClientAddon.api.NetClient.IsConnected || Sender == null)
             {
-                Log.LogDebug("Not connected");
+                Log.LogDebug("[CLI: Network Sender Collection] Not connected");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace BasicItemSync.Modules.Network.Client
                 return;
             }
 
-            Log.LogDebug($"[CLI] Sending {type}");
+            Log.LogDebug($"[CLI: Network Sender Collection] Sending {type}");
             Sender.SendCollectionData(type, packet);
         }
 
@@ -37,7 +37,7 @@ namespace BasicItemSync.Modules.Network.Client
         {
             if (!ClientAddon.api.NetClient.IsConnected || Sender == null)
             {
-                Log.LogDebug("Not connected");
+                Log.LogDebug("[CLI: Network Sender Single] Not connected");
                 return;
             }
 
@@ -46,7 +46,7 @@ namespace BasicItemSync.Modules.Network.Client
                 return;
             }
 
-            Log.LogDebug($"[CLI] Sending {type}");
+            Log.LogDebug($"[CLI: Network Sender Single] Sending {type}");
             Sender.SendSingleData(type, packet);
         }
 
@@ -187,10 +187,6 @@ namespace BasicItemSync.Modules.Network.Client
 
         public static void SendSettings(Dictionary<string, bool> settings)
         {
-            foreach (var setting in settings)
-            {
-                Log.LogDebug(setting.Key, setting.Value);
-            }
             var packet = new SettingsUpdatePacket
             {
                 Settings = Server.SyncServerSettings.PopulateFromValues(settings.Values.ToList())

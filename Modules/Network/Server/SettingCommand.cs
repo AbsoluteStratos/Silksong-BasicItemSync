@@ -35,7 +35,7 @@ namespace BasicItemSync.Modules.Network.Server
 
             var settingName = "Sync" + arguments[1];
             var settings = typeof(SyncServerSettings).GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-            Log.LogDebug(settings.Length);
+
             var setting = settings.FirstOrDefault(s => s.Name.Equals(settingName, StringComparison.CurrentCultureIgnoreCase));
             if (setting == null)
             {

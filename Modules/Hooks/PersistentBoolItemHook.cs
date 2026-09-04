@@ -284,13 +284,13 @@ internal class PersistentBoolItemHook
     static void SaveStateNoConditionPostfix(PersistentItem<bool> __instance, bool __state) {
         if (__state == __instance.ItemData.Value)// || __instance.ItemData.Value == __instance.DefaultValue)
         {
-            Log.LogDebug($"persistent '{__instance.ItemData.ID}' value was the same ({__instance.ItemData.Value}), skipping");
+            Log.LogDebug($"[CLI: PBI.SSNC] persistent '{__instance.ItemData.ID}' value was the same ({__instance.ItemData.Value}), skipping");
             return;
         }
 
         if (__instance.itemData.IsSemiPersistent || __instance.dontSave)
         {
-            Log.LogDebug($"persistent '{__instance.ItemData.ID}' value was semipersistent");
+            Log.LogDebug($"[CLI: PBI.SSNC] persistent '{__instance.ItemData.ID}' value was semipersistent");
             return;
         }
 

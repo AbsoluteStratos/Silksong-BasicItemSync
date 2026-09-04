@@ -97,7 +97,7 @@ internal class NetworkForwarder
     static void Announce(ushort id, SendFlagPacket packet, bool isPossiblySilent)
     {
         var type = packet.FlagType;
-        Log.LogDebug($"[SERVER] Received {type}");
+        Log.LogDebug($"[SERVER: Network Forwarder Announce] Received {type}");
         if (isPossiblySilent && string.IsNullOrEmpty(packet.Name)) return;
 
         string template = type switch

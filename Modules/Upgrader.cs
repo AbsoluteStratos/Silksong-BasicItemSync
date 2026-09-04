@@ -57,8 +57,16 @@ namespace BasicItemSync.Modules
             var collectable = CollectableItemManager.GetItemByName(itemKey);
             if (!collectable)
             {
-                Log.LogError($"Unknown collectable {itemKey}");
-                return false;
+                var relic = CollectableRelicManager.GetRelic(itemKey);
+
+                if (!relic)
+                {
+                    Log.LogError($"Unknown collectable {itemKey}");
+                    return false;
+                }
+
+                relic.Get(false);
+                return Save();
             }
 
             collectable.AddAmount(amount);
@@ -89,7 +97,7 @@ namespace BasicItemSync.Modules
             {
                 if (persistent.Value)
                 {
-                    Log.LogDebug($"[CLI] Already collected silk heart for {scene}");
+                    Log.LogDebug($"[CLI: Upgrade Silk Heart] Already collected silk heart for {scene}");
                     return false;
                 }
             }
@@ -99,7 +107,7 @@ namespace BasicItemSync.Modules
 
             PlayerData.instance.silkRegenMax++;
 
-            Log.LogDebug($"[CLI] Collecting silk heart for {scene}");
+            Log.LogDebug($"[CLI: Upgrade Silk Heart] Collecting silk heart for {scene}");
             SceneData.instance.PersistentBools.SetValue(new PersistentItemData<bool>
             {
                 ID = ItemNames.SilkHeart,

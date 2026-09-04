@@ -20,19 +20,19 @@ internal class PersistentIntItemHook
         __state = __instance.ItemData.Value;
     }
 
-    [HarmonyPatch(nameof(PersistentBoolItem.SaveStateNoCondition))]
+    [HarmonyPatch(nameof(PersistentIntItem.SaveStateNoCondition))]
     [HarmonyPostfix]
     public static void SaveStateNoConditionPostfix(PersistentItem<int> __instance, int __state)
     {
         if (__state == __instance.ItemData.Value)// || __instance.ItemData.Value == __instance.DefaultValue)
         {
-            Log.LogDebug($"persistent '{__instance.ItemData.ID}' value was the same ({__instance.ItemData.Value}), skipping");
+            Log.LogDebug($"[CLI: PII.SSNC] persistent '{__instance.ItemData.ID}' value was the same ({__instance.ItemData.Value}), skipping");
             return;
         }
 
         if (__instance.itemData.IsSemiPersistent || __instance.dontSave)
         {
-            Log.LogDebug($"persistent '{__instance.ItemData.ID}' value was semipersistent");
+            Log.LogDebug($"[CLI: PII.SSNC] persistent '{__instance.ItemData.ID}' value was semipersistent");
             return;
         }
 
@@ -61,11 +61,11 @@ internal class PersistentIntItemHook
 
         if (flagType == FlagType.DoNotSync)
         {
-            Log.LogDebug($"persistent '{__instance.ItemData.ID}' value was not sent");
+            Log.LogDebug($"[CLI: PII.SSNC] persistent '{__instance.ItemData.ID}' value was not sent");
             return;
         }
 
-        Log.LogDebug($"[CLI: PERSISTENT INT] {commonId}, {flagType}");
+        Log.LogDebug($"[CLI: PII.SSNC] {commonId}, {flagType}");
 
         NetworkSender.AddPersistentIntData(id, scene, value, flagType);
     }
@@ -83,13 +83,6 @@ internal class PersistentIntItemHook
 [HarmonyPatch(typeof(HitSlidePlatform))]
 internal static class HitSlidePlatformHook
 {
-    [HarmonyPatch(nameof(HitSlidePlatform.SetAtNode), typeof(int))]
-    [HarmonyPostfix]
-    public static void SetAtNode(HitSlidePlatform __instance, int nodeIndex)
-    {
-        PersistentIntItemHook.UpdateValue(__instance.persistent, nodeIndex);
-    }
-
     [HarmonyPatch(nameof(HitSlidePlatform.OnHit))]
     [HarmonyPrefix]
     public static void OnHitPrefix(HitSlidePlatform __instance, out int __state)
@@ -103,7 +96,7 @@ internal static class HitSlidePlatformHook
     {
         if (__state == __instance.currentNodeIndex)
         {
-            Log.LogDebug($"Platform {__instance.name} state was the same ({__state})");
+            Log.LogDebug($"[CLI HSP.OH] Platform {__instance.name} state was the same ({__state})");
             return;
         }
 

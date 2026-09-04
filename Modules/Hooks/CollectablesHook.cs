@@ -11,7 +11,7 @@ internal class CollectableItemPickupHook
     {
         { "Ant Trapper Item", FlagType.QuestItem },
         { "Architect Key", FlagType.Progression },
-        { "Beastfly Remainss", FlagType.QuestItem },
+        { "Beastfly Remains", FlagType.QuestItem },
         { "Belltown House Key", FlagType.Progression },
         { "Blue Goop Jar", FlagType.QuestItem },
         { "Broken SilkShot", FlagType.Tool },
@@ -94,7 +94,29 @@ internal class CollectableItemPickupHook
         { "Ward Boss Key", FlagType.Progression },
         { "Ward Key", FlagType.Progression },
         { "White Flower", FlagType.Progression },
-        { "Wood Witch Item", FlagType.Progression }
+        { "Wood Witch Item", FlagType.Progression },
+
+        { "Ancient Egg Abyss Middle",               FlagType.Collectable },
+        { "Bone Record Bone_East_14",               FlagType.Collectable },
+        { "Bone Record Greymoor_flooded_corridor",  FlagType.Collectable },
+        { "Bone Record Understore_Map_Room",        FlagType.Collectable },
+        { "Bone Record Wisp Top",                   FlagType.Collectable },
+        { "Librarian Melody Cylinder",              FlagType.Collectable },
+        { "Psalm Cylinder Grindle",                 FlagType.Collectable },
+        { "Psalm Cylinder Hang",                    FlagType.Collectable },
+        { "Psalm Cylinder Librarian",               FlagType.Collectable },
+        { "Psalm Cylinder Library Roof",            FlagType.Collectable },
+        { "Psalm Cylinder Ward",                    FlagType.Collectable },
+        { "Seal Chit Aspid_01",                     FlagType.Collectable },
+        { "Seal Chit City Merchant",                FlagType.Collectable },
+        { "Seal Chit Silk Siphon",                  FlagType.Collectable },
+        { "Seal Chit Ward Corpse",                  FlagType.Collectable },
+        { "Weaver Record Conductor",                FlagType.Collectable },
+        { "Weaver Record Sprint_Challenge",         FlagType.Collectable },
+        { "Weaver Record Weave_08",                 FlagType.Collectable },
+        { "Weaver Totem Bonetown_upper_room",       FlagType.Collectable },
+        { "Weaver Totem Slab_Bottom",               FlagType.Collectable },
+        { "Weaver Totem Witch",                     FlagType.Collectable },
     };
     [HarmonyPatch(nameof(CollectableItemPickup.DoPickupAction))]
     [HarmonyPostfix]
